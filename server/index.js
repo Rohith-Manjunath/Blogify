@@ -7,6 +7,7 @@ const corsOptions = {
   origin: ["http://localhost:5173"],
 };
 const UserRoute = require("./routes/UserRoutes");
+const BlogRoute = require("./routes/BlogRoute");
 
 const dotenv = require("dotenv");
 const { dbConnection } = require("./config/dbConnection");
@@ -32,6 +33,7 @@ app.use(cookie());
 app.use(cors(corsOptions));
 
 app.use("/api", UserRoute);
+app.use("/api", BlogRoute);
 
 app.use(error);
 
