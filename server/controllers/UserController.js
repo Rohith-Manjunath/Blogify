@@ -12,7 +12,7 @@ exports.Home = (req, res) => {
 };
 
 exports.registerUser = catchAsyncError(async (req, res, next) => {
-  const { name, email, password, confirmPassword, image } = req.body;
+  const { name, email, password, confirmPassword } = req.body;
   const user = await User.findOne({ email });
 
   if (user) {
@@ -38,6 +38,7 @@ exports.registerUser = catchAsyncError(async (req, res, next) => {
   res.status(201).json({
     success: true,
     newUser,
+    message: "Registration Successful",
   });
 });
 

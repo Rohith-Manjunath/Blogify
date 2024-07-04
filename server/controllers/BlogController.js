@@ -1,8 +1,15 @@
-const Blog = require("../Models/BlogModel");
+const Blog = require("../models/BlogModel");
 const ErrorHandler = require("../utils/ErrorHandler");
 const catchAsyncError = require("../utils/catchAsyncError");
 
 exports.createBlog = catchAsyncError(async (req, res, next) => {
+  const myCloud = await cloudinary.v2.uploader.upload(req.body.image, {
+    folder: "test",
+    width: 400,
+    height: 400,
+    crop: "scale",
+  });
+
   const { title, description } = req.body;
   const userId = req.user._id; // Accessing the user's _id directly
 
@@ -10,6 +17,10 @@ exports.createBlog = catchAsyncError(async (req, res, next) => {
     title,
     description,
     user: userId, // Assigning the userId to the user field
+    image: {
+      public_id: myCloud.public_id,
+      url: myCloud.secure_url,
+    },
   });
 
   res.status(201).json({
@@ -48,11 +59,13 @@ exports.deleteBlog = catchAsyncError(async (req, res, next) => {
   if (!blog) {
     return next(new ErrorHandler("No blog found with this id", 404));
   }
-  if (!(blog?.user?._id.toString() === _id.toString())) {
+  if (!(blog.user._id.toString() === _id.toString())) {
     return next(
       new ErrorHandler("You do not have permission to perform this action", 403)
     );
   }
+
+  await cloudinary.uploader.destroy(blog.image.public_id);
 
   await Blog.deleteOne({ _id: blogId });
   res.status(200).json({
@@ -74,10 +87,28 @@ exports.updateBlog = catchAsyncError(async (req, res, next) => {
       new ErrorHandler("You do not have permission to perform this action", 403)
     );
   }
-  const { description, title } = req.body;
+  const { description, image, title } = req.body;
 
-  blog.title = title;
-  blog.description = description;
+  if (!image || typeof image === "undefined" || typeof image === "") {
+    blog.title = title;
+    blog.description = description;
+  } else {
+    await cloudinary.uploader.destroy(blog.image.public_id);
+
+    const myCloud = await cloudinary.v2.uploader.upload(req.body.image, {
+      folder: "test",
+      width: 400,
+      height: 400,
+      crop: "scale",
+    });
+
+    blog.title = title;
+    blog.description = description;
+    blog.image = blog.image = {
+      public_id: myCloud.public_id,
+      url: myCloud.secure_url,
+    };
+  }
 
   await blog.save();
 

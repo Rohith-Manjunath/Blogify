@@ -5,6 +5,7 @@ const cookie = require("cookie-parser");
 const cors = require("cors");
 const corsOptions = {
   origin: ["http://localhost:5173"],
+  credentials: true,
 };
 const UserRoute = require("./routes/UserRoutes");
 const BlogRoute = require("./routes/BlogRoute");

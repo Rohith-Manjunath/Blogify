@@ -8,6 +8,16 @@ const BlogSchema = new mongoose.Schema(
       maxlength: [60, "Title cannot exceed 60 characters"],
       minlength: [3, "Title should have atleast 3 characters"],
     },
+    image: {
+      public_id: {
+        type: String,
+        required: true,
+      },
+      url: {
+        type: String,
+        required: true,
+      },
+    },
     description: {
       type: String,
       required: [true, "Please add a description to your blog"],
