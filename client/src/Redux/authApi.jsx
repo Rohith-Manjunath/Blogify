@@ -44,6 +44,13 @@ export const myApi = createApi({
         method: "GET",
       }),
     }),
+    myBlogs: builder.query({
+      query: () => ({
+        url: "myBlogs",
+        method: "GET",
+        credentials: "include",
+      }),
+    }),
   }),
 });
 
@@ -53,4 +60,5 @@ export const {
   useRegisterMutation,
   useLoadUserQuery,
   useBlogsQuery,
+  useMyBlogsQuery,
 } = myApi;

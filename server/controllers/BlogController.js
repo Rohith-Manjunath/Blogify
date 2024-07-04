@@ -118,3 +118,13 @@ exports.updateBlog = catchAsyncError(async (req, res, next) => {
     message: "Blog updated successfully",
   });
 });
+
+exports.myBlogs = catchAsyncError(async (req, res, next) => {
+  const { _id } = req.user;
+  const blogs = await Blog.find({ user: _id }).sort({ createdAr: -1 });
+
+  res.status(200).json({
+    success: true,
+    blogs,
+  });
+});

@@ -1,8 +1,10 @@
-import { useBlogsQuery } from "../Redux/authApi";
+import { useParams } from "react-router-dom";
+import { useMyBlogsQuery } from "../Redux/authApi";
 import BlogCard from "../components/Cards/BlogCard";
 
-const Home = () => {
-  const { data, isLoading } = useBlogsQuery();
+const MyBlogs = () => {
+  const params = useParams();
+  const { data, isLoading } = useMyBlogsQuery(params?.userId);
 
   if (isLoading) {
     return (
@@ -28,4 +30,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default MyBlogs;
