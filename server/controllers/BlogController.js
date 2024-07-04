@@ -1,6 +1,7 @@
 const Blog = require("../models/BlogModel");
 const ErrorHandler = require("../utils/ErrorHandler");
 const catchAsyncError = require("../utils/catchAsyncError");
+const cloudinary = require("cloudinary");
 
 exports.createBlog = catchAsyncError(async (req, res, next) => {
   const myCloud = await cloudinary.v2.uploader.upload(req.body.image, {

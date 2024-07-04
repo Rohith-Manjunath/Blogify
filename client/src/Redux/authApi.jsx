@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 const devUrl = "http://localhost:3000/api/";
 
 export const myApi = createApi({
-  reducerPath: "api",
+  reducerPath: "myApi",
   baseQuery: fetchBaseQuery({
     baseUrl: devUrl,
   }),
@@ -17,10 +17,9 @@ export const myApi = createApi({
       }),
     }),
     loadUser: builder.query({
-      query: (credentials) => ({
+      query: () => ({
         url: "me",
         method: "GET",
-        body: credentials,
         credentials: "include",
       }),
     }),
@@ -39,6 +38,12 @@ export const myApi = createApi({
         credentials: "include",
       }),
     }),
+    blogs: builder.query({
+      query: () => ({
+        url: "blogs",
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -47,4 +52,5 @@ export const {
   useLogoutMutation,
   useRegisterMutation,
   useLoadUserQuery,
+  useBlogsQuery,
 } = myApi;

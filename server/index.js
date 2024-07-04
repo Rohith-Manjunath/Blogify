@@ -13,6 +13,7 @@ const BlogRoute = require("./routes/BlogRoute");
 const dotenv = require("dotenv");
 const { dbConnection } = require("./config/dbConnection");
 const error = require("./middlewares/error");
+const cloudinary = require("cloudinary");
 
 dotenv.config({ path: "./config/config.env" });
 
@@ -37,6 +38,12 @@ app.use("/api", UserRoute);
 app.use("/api", BlogRoute);
 
 app.use(error);
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 // Database connection
 dbConnection(process.env.URI);

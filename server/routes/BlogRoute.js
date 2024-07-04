@@ -10,7 +10,7 @@ const {
 const router = express.Router();
 
 router.route("/create").post(isAuthenticatedUser, createBlog);
-router.route("/blogs").get(isAuthenticatedUser, allBlogs);
+router.route("/blogs").get(allBlogs);
 router
   .route("/blog/:blogId")
   .get(isAuthenticatedUser, getSingleblog)
