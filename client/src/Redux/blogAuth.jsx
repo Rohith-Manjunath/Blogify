@@ -24,7 +24,7 @@ export const blogApi = createApi({
         method: "GET",
         credentials: "include",
       }),
-      invalidatesTags: ["Blog"],
+      providesTags: ["Blog"],
     }),
 
     create: builder.mutation({
@@ -45,6 +45,15 @@ export const blogApi = createApi({
       }),
       invalidatesTags: ["Blog"],
     }),
+    updateBlog: builder.mutation({
+      query: ({ blogId, credentials }) => ({
+        url: `blog/${blogId}`,
+        method: "PUT",
+        credentials: "include",
+        body: credentials,
+      }),
+      invalidatesTags: ["Blog"],
+    }),
   }),
 });
 
@@ -53,4 +62,5 @@ export const {
   useSingleBlogQuery,
   useDeleteBlogMutation,
   useMyBlogsQuery,
+  useUpdateBlogMutation,
 } = blogApi;
