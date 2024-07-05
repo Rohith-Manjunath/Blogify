@@ -5,6 +5,8 @@ import Home from "./pages/Home";
 import Blog from "./pages/Blog";
 import Navbar from "./components/Navbar";
 import MyBlogs from "./pages/MyBlogs";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 const App = () => {
   return (
@@ -16,6 +18,11 @@ const App = () => {
         <Route path="/login" element={<Login />}></Route>
         <Route path="/blog/:id" element={<Blog />}></Route>
         <Route path="/myBlogs/:userId" element={<MyBlogs />}></Route>
+        <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
+        <Route
+          path="/reset/password/:token"
+          element={<ResetPassword />}
+        ></Route>
       </Routes>
     </BrowserRouter>
   );

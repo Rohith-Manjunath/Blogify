@@ -76,12 +76,12 @@ const Login = () => {
           </button>
         </form>
         <div className="mt-6 text-center">
-          <a
-            href="#"
+          <Link
+            to="/forgotPassword"
             className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
           >
             Forgot your password?
-          </a>
+          </Link>
         </div>
         <p className="mt-4 text-center text-sm text-gray-600">
           Don't have an account?{" "}
