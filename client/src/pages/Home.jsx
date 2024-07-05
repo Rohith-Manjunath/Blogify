@@ -1,5 +1,5 @@
-import { useBlogsQuery } from "../Redux/authApi";
 import BlogCard from "../components/Cards/BlogCard";
+import { useBlogsQuery } from "../Redux/authApi";
 
 const Home = () => {
   const { data, isLoading } = useBlogsQuery();
@@ -20,8 +20,8 @@ const Home = () => {
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {data &&
-            data.blogs &&
-            data.blogs.map((blog) => <BlogCard key={blog?._id} blog={blog} />)}
+            data?.blogs &&
+            data?.blogs.map((blog) => <BlogCard key={blog?._id} blog={blog} />)}
         </div>
       </div>
     </div>
