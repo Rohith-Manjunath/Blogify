@@ -36,7 +36,10 @@ const Register = () => {
       <MetaData title={"Register"} />
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500">
         <div className="bg-white p-8 rounded-2xl shadow-2xl w-[480px] transform hover:scale-105 transition-transform duration-300">
-          <h2 className="text-3xl font-bold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-pink-500">
+          <h2
+            style={{ lineHeight: "1.5" }} // Adjust line height as needed
+            className="text-3xl font-bold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-pink-500"
+          >
             Register
           </h2>
           <form onSubmit={handleSubmit}>

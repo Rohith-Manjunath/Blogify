@@ -65,9 +65,11 @@ const MyBlogs = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             className="text-5xl font-extrabold text-center mb-16 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 mt-20"
+            style={{ lineHeight: "1.5" }} // Adjust line height as needed
           >
             My Blogs
           </motion.h1>
+
           <div className="flex justify-end mb-8">
             <motion.button
               whileHover={{ scale: 1.05 }}
