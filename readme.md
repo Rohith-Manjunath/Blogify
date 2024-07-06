@@ -46,10 +46,16 @@ Welcome to the Blog Application, built with the MERN stack (MongoDB, Express, Re
 
 Check out the live demo of the Blog Application [here](https://adorable-tanuki-7799ca.netlify.app).
 
+## Stay-in-Touch
+
+Connect with me on social media:
+
 ## Connect with Me
 
 Feel free to connect with me on professional platforms:
 
-- [LinkedIn](https://www.linkedin.com/in/rohith-kira-bab309267/)
-- [Twitter](https://twitter.com/rohith_m_kira)
-- [Instagram](https://www.instagram.com/rohith_kira/)
+[![Twitter](https://img.shields.io/badge/Twitter-rohith_m_kira-00acee?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/rohith_m_kira)
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-rohith_kira-0077b5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/rohith-kira-bab309267/)
+ 
+[![Instagram](https://img.shields.io/badge/Instagram-rohith_kira-e4405f?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/rohith_kira/)
