@@ -73,6 +73,7 @@ const Login = () => {
               />
             </div>
             <button
+              disabled={isLoading}
               type="submit"
               className="w-full bg-gradient-to-r from-indigo-600 to-pink-500 text-white py-3 px-6 rounded-lg font-semibold text-lg hover:from-indigo-700 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transform hover:scale-105 transition-all duration-300"
             >

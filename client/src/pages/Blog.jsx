@@ -84,7 +84,7 @@ const Blog = () => {
       setIsEditing(false);
       alert.success(data?.message);
     } catch (err) {
-      alert.error("Failed to update blog");
+      alert.error(err?.data?.err);
     }
   };
 
