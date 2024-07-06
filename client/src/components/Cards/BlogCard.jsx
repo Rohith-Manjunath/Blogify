@@ -26,14 +26,36 @@ const BlogCard = ({ blog }) => {
         </div>
       </div>
       <div className="p-6">
-        <p className="text-gray-600 mb-4 line-clamp-3">{blog?.description}</p>
-        <div className="flex justify-between items-center">
-          <span className="text-sm text-indigo-600 font-semibold">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 text-gray-400 mr-2"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span className="text-sm font-medium text-gray-700">
+              {blog?.user?.name || blog?.user?.email || "Anonymous"}
+            </span>
+          </div>
+          <span className="text-xs text-gray-500">
             {new Date(blog?.createdAt).toLocaleDateString("en-US", {
               year: "numeric",
               month: "long",
               day: "numeric",
             })}
+          </span>
+        </div>
+        <p className="text-gray-600 mb-4 line-clamp-3">{blog?.description}</p>
+        <div className="flex justify-between items-center">
+          <span className="text-sm text-indigo-600 font-semibold">
+            {blog?.category}
           </span>
           <Link
             to={`/blog/${blog?._id}`}

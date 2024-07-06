@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useLogoutMutation } from "../Redux/authApi";
 import { LogoutUser } from "../Redux/UserSlice";
 import { useAlert } from "react-alert";
@@ -56,44 +56,25 @@ const Navbar = () => {
           </div>
           <div className="hidden md:flex md:items-center">
             <div className="flex space-x-4">
-              <Link
+              <NavLink
                 to="/"
-                className="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                className=" text-gray-700 hover:text-white hover:bg-[#4f4ff9] px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
               >
                 Blogs
-              </Link>
+              </NavLink>
               {user && (
-                <Link
+                <NavLink
                   to={`/myBlogs/${user?._id}`}
-                  className="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                  className=" text-gray-700 hover:text-white hover:bg-[#4f4ff9] hover:bg-[rgba((77, 77, 235)] px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
                 >
                   My Blogs
-                </Link>
+                </NavLink>
               )}
             </div>
             <div className="ml-4 flex items-center">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="bg-gray-100 text-gray-700 rounded-full py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white w-64 transition-all duration-200"
-                />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-gray-500 absolute left-3 top-2.5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
               {!user ? (
                 <>
-                  <div className="mt-3 px-3">
+                  <div className=" px-3">
                     <Link
                       to={"/login"}
                       className="w-full bg-gradient-to-r from-indigo-600 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-medium hover:from-indigo-700 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200"
@@ -101,7 +82,7 @@ const Navbar = () => {
                       Sign In
                     </Link>
                   </div>
-                  <div className="mt-3 px-3">
+                  <div className=" px-3">
                     <Link
                       to={"/register"}
                       className="w-full bg-gradient-to-r from-indigo-600 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-medium hover:from-indigo-700 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200"
@@ -169,39 +150,21 @@ const Navbar = () => {
         } md:hidden absolute top-20 left-0 w-full bg-white shadow-lg transition-all duration-300 ease-in-out`}
       >
         <div className="px-2 pt-2 pb-3 space-y-1">
-          <Link
+          <NavLink
             to="/"
-            className="text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
+            className=" text-gray-700 hover:text-white hover:bg-[#4f4ff9] block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
           >
             Blogs
-          </Link>
+          </NavLink>
           {user && (
-            <Link
+            <NavLink
               to={`/myBlogs/${user?._id}`}
-              className="text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
+              className=" text-gray-700 hover:text-white hover:bg-[#4f4ff9] block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
             >
               My Blogs
-            </Link>
+            </NavLink>
           )}
-          <div className="relative mt-3 px-3">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="bg-gray-100 text-gray-700 rounded-full py-2 px-4 pl-10 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all duration-200 my-4"
-            />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 my-4 w-5 text-gray-500 absolute left-6 top-2.5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </div>
+
           {!user ? (
             <>
               <div className="flex items-center justify-center flex-col gap-4 w-full">

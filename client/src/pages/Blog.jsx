@@ -4,8 +4,16 @@ import { useSingleBlogQuery, useUpdateBlogMutation } from "../Redux/blogAuth";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { FiEdit3, FiSave, FiX, FiCalendar, FiUser } from "react-icons/fi";
+import {
+  FiEdit3,
+  FiSave,
+  FiX,
+  FiCalendar,
+  FiUser,
+  FiClock,
+} from "react-icons/fi";
 import { useAlert } from "react-alert";
+import MetaData from "../components/layouts/MetaData";
 
 const Blog = () => {
   const params = useParams();
@@ -87,148 +95,144 @@ const Blog = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 py-16 px-4 sm:px-6 lg:px-8 transition-all duration-1000 ease-in-out">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
-        transition={{ duration: 0.8 }}
-        className="max-w-4xl mx-auto"
-      >
-        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden transform hover:scale-105 transition-transform duration-300 mt-20">
-          <div className="relative">
-            <img
-              src={blog?.image.url}
-              alt={blog?.title}
-              className="w-full h-96 object-cover object-center"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
-            <div className="absolute bottom-0 left-0 right-0 p-8">
-              <AnimatePresence mode="wait">
-                {isEditing ? (
-                  <motion.input
-                    key="input"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    type="text"
-                    value={editedTitle}
-                    onChange={(e) => setEditedTitle(e.target.value)}
-                    className="text-4xl md:text-5xl font-bold mb-4 text-white leading-tight bg-transparent border-b-2 border-white w-full focus:outline-none"
-                  />
-                ) : (
-                  <motion.h1
-                    key="title"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    className="text-4xl md:text-5xl font-bold mb-4 text-white leading-tight"
-                  >
-                    {blog?.title}
-                  </motion.h1>
-                )}
-              </AnimatePresence>
-              <div className="flex items-center text-white opacity-80 space-x-4">
-                <div className="flex items-center">
-                  <FiCalendar className="h-5 w-5 mr-2" />
-                  <span>
-                    {new Date(blog?.createdAt).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </span>
-                </div>
-                <div className="flex items-center">
-                  <FiUser className="h-5 w-5 mr-2" />
-                  <span>{blog?.author?.name}</span>
+    <>
+      <MetaData title={blog?.title} />
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 py-16 px-4 sm:px-6 lg:px-8 transition-all duration-1000 ease-in-out">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
+          transition={{ duration: 0.8 }}
+          className="max-w-4xl mx-auto"
+        >
+          <div className="bg-white rounded-3xl shadow-2xl overflow-hidden transform hover:scale-105 transition-transform duration-300 mt-20">
+            <div className="relative">
+              <img
+                src={blog?.image?.url}
+                alt={blog?.title}
+                className="w-full h-96 object-cover object-center"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70"></div>
+              <div className="absolute bottom-0 left-0 right-0 p-8">
+                <AnimatePresence mode="wait">
+                  {isEditing ? (
+                    <motion.input
+                      key="input"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      type="text"
+                      value={editedTitle}
+                      onChange={(e) => setEditedTitle(e.target.value)}
+                      className="text-4xl md:text-5xl font-bold mb-4 text-white leading-tight bg-transparent border-b-2 border-white w-full focus:outline-none"
+                    />
+                  ) : (
+                    <motion.h1
+                      key="title"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      className="text-4xl md:text-5xl font-bold mb-4 text-white leading-tight"
+                    >
+                      {blog?.title}
+                    </motion.h1>
+                  )}
+                </AnimatePresence>
+                <div className="flex flex-wrap items-center text-white opacity-90 space-x-4 mt-4">
+                  <div className="flex items-center bg-black bg-opacity-50 rounded-full px-3 py-1 text-sm">
+                    <FiCalendar className="h-4 w-4 mr-2" />
+                    <span>
+                      {new Date(blog?.createdAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </span>
+                  </div>
+                  <div className="flex items-center bg-black bg-opacity-50 rounded-full px-3 py-1 text-sm">
+                    <FiUser className="h-4 w-4 mr-2" />
+                    <span>{blog?.author?.name}</span>
+                  </div>
+                  <div className="flex items-center bg-black bg-opacity-50 rounded-full px-3 py-1 text-sm">
+                    <FiClock className="h-4 w-4 mr-2" />
+                    <span>
+                      {Math.ceil(blog?.description.split(" ").length / 200)} min
+                      read
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div className="p-8 md:p-12">
-            <div className="prose prose-lg max-w-none">
-              <AnimatePresence mode="wait">
-                {isEditing ? (
-                  <motion.div
-                    key="editor"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <ReactQuill
-                      theme="snow"
-                      value={editedContent}
-                      onChange={setEditedContent}
-                      className="h-64 mb-12"
+            <div className="p-8 md:p-12 relative">
+              {!isEditing && (
+                <motion.button
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleEdit}
+                  className="absolute top-4 right-4 p-2 bg-indigo-500 text-white rounded-full shadow-lg hover:bg-indigo-600 transition duration-300"
+                >
+                  <FiEdit3 className="h-5 w-5" />
+                </motion.button>
+              )}
+              <div className="prose prose-lg max-w-none">
+                <AnimatePresence mode="wait">
+                  {isEditing ? (
+                    <motion.div
+                      key="editor"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="relative"
+                    >
+                      <ReactQuill
+                        theme="snow"
+                        value={editedContent}
+                        onChange={setEditedContent}
+                        className="h-64 mb-16"
+                      />
+                      <div className="absolute bottom-0 right-0 space-x-4 mt-4">
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={handleSave}
+                          className="px-4 py-2 bg-green-500 text-white rounded-full shadow-lg hover:bg-green-600 transition duration-300"
+                          disabled={isUpdating}
+                        >
+                          <FiSave className="inline-block mr-2" />
+                          {isUpdating ? "Saving..." : "Save"}
+                        </motion.button>
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={handleCancel}
+                          className="px-4 py-2 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 transition duration-300"
+                        >
+                          <FiX className="inline-block mr-2" />
+                          Cancel
+                        </motion.button>
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="content"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      dangerouslySetInnerHTML={{
+                        __html: stripPTags(blog?.description),
+                      }}
+                      className="text-gray-700 leading-relaxed text-lg"
                     />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="content"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    dangerouslySetInnerHTML={{
-                      __html: stripPTags(blog?.description),
-                    }}
-                    className="text-gray-700 leading-relaxed text-lg"
-                  />
-                )}
-              </AnimatePresence>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="mt-12 flex justify-center space-x-4">
-          <AnimatePresence mode="wait">
-            {isEditing ? (
-              <>
-                <motion.button
-                  key="save"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleSave}
-                  className="px-6 py-3 bg-gradient-to-r from-green-400 to-green-600 text-white rounded-full font-semibold shadow-lg hover:from-green-500 hover:to-green-700 transition duration-300 flex items-center"
-                  disabled={isUpdating}
-                >
-                  <FiSave className="mr-2" />
-                  {isUpdating ? "Saving..." : "Save Changes"}
-                </motion.button>
-                <motion.button
-                  key="cancel"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleCancel}
-                  className="px-6 py-3 bg-gradient-to-r from-red-400 to-red-600 text-white rounded-full font-semibold shadow-lg hover:from-red-500 hover:to-red-700 transition duration-300 flex items-center"
-                >
-                  <FiX className="mr-2" />
-                  Cancel
-                </motion.button>
-              </>
-            ) : (
-              <motion.button
-                key="edit"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleEdit}
-                className="px-6 py-3 bg-gradient-to-r from-indigo-400 to-purple-600 text-white rounded-full font-semibold shadow-lg hover:from-indigo-500 hover:to-purple-700 transition duration-300 flex items-center"
-              >
-                <FiEdit3 className="mr-2" />
-                Edit Blog
-              </motion.button>
-            )}
-          </AnimatePresence>
-        </div>
-      </motion.div>
-    </div>
+        </motion.div>
+      </div>
+    </>
   );
 };
 

@@ -1,9 +1,10 @@
 import BlogCard from "../components/Cards/BlogCard";
+import MetaData from "../components/layouts/MetaData";
 import NoData from "../components/NoData";
 import { useBlogsQuery } from "../Redux/authApi";
 
 const Home = () => {
-  const { data, isLoading, refetch } = useBlogsQuery();
+  const { data, isLoading } = useBlogsQuery();
 
   if (isLoading) {
     return (
@@ -18,21 +19,23 @@ const Home = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 py-16 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-5xl font-extrabold text-center mb-16 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 mt-20">
-          Discover Our Latest Blogs
-        </h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {data &&
-            data?.blogs &&
-            data?.blogs?.map((blog) => (
-              <BlogCard key={blog?._id} blog={blog} />
-            ))}
+    <>
+      <MetaData title={"Blogify"} />
+      <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-5xl font-extrabold text-center mb-16 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 mt-20">
+            Discover Our Latest Blogs
+          </h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {data &&
+              data?.blogs &&
+              data?.blogs?.map((blog) => (
+                <BlogCard key={blog?._id} blog={blog} />
+              ))}
+          </div>
         </div>
       </div>
-      <button onClick={refetch}>refetch</button>
-    </div>
+    </>
   );
 };
 

@@ -7,17 +7,22 @@ import Navbar from "./components/Navbar";
 import MyBlogs from "./pages/MyBlogs";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import NotFound from "./components/NotFound";
+import ProtectedRoute from "./components/layouts/ProtectedRoute";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Navbar />
       <Routes>
+        <Route path="*" element={<NotFound />}></Route>
         <Route path="/" element={<Home />}></Route>
         <Route path="/register" element={<Register />}></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/blog/:id" element={<Blog />}></Route>
-        <Route path="/myBlogs/:userId" element={<MyBlogs />}></Route>
+        <Route element={<ProtectedRoute />}>
+          <Route path="/myBlogs/:userId" element={<MyBlogs />}></Route>
+        </Route>
         <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
         <Route
           path="/reset/password/:token"
