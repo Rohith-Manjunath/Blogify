@@ -65,7 +65,7 @@ exports.loginUser = catchAsyncError(async (req, res, next) => {
   }
 
   jwtToken("Login successful", 200, user, res);
-  const message = `You have successfully logged in to Mysore International School Website`;
+  const message = `You have successfully logged in to blogify Website`;
   try {
     await sendEmail({
       email: user.email,
