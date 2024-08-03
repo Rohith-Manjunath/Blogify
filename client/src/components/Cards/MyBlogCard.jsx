@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useLikeMutation } from "../../Redux/blogAuth";
+import { useSelector } from "react-redux";
 
 const MyBlogCard = ({ blog, handleOpen }) => {
   const [likes, setLikes] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
 
   const [like, { isLoading }] = useLikeMutation();
+  const user = useSelector((state) => state?.user?.user);
 
   const handleLike = async (blogId) => {
     try {
@@ -66,7 +68,7 @@ const MyBlogCard = ({ blog, handleOpen }) => {
       <div className="flex justify-start items-center m-4 gap-1">
         <button
           onClick={() => {
-            setIsLiked(!isLiked), handleLike(blog?._id);
+            setIsLiked(user && !isLiked), handleLike(blog?._id);
           }}
           className="focus:outline-none"
         >

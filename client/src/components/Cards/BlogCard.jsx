@@ -2,19 +2,25 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAlert } from "react-alert";
 import { useLikeMutation } from "../../Redux/blogAuth";
+import { useSelector } from "react-redux";
 
 const BlogCard = ({ blog }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const alert = useAlert();
   const [likes, setLikes] = useState(0);
+  const user = useSelector((state) => state?.user?.user);
 
   const [like, { isLoading }] = useLikeMutation();
 
   const handleLike = async (blogId) => {
     try {
-      const data = await like(blogId).unwrap();
-      setLikes(data?.likes || 0);
+      if (user) {
+        const data = await like(blogId).unwrap();
+        setLikes(data?.likes || 0);
+      } else {
+        alert.show("Please login to like this blog");
+      }
     } catch (e) {
       alert.error(e?.data?.err);
     }
@@ -97,7 +103,7 @@ const BlogCard = ({ blog }) => {
         <div className="flex justify-start items-center mt-4 gap-1">
           <button
             onClick={() => {
-              setIsLiked(!isLiked), handleLike(blog?._id);
+              setIsLiked(user && !isLiked), handleLike(blog?._id);
             }}
             className="focus:outline-none"
           >
