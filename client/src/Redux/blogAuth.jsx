@@ -55,6 +55,14 @@ export const blogApi = createApi({
       }),
       invalidatesTags: ["Blog"],
     }),
+    like: builder.mutation({
+      query: (id) => ({
+        url: `blog/like/${id}`,
+        method: "PUT",
+        credentials: "include",
+      }),
+      invalidatesTags: ["Blog"],
+    }),
   }),
 });
 
@@ -64,4 +72,5 @@ export const {
   useDeleteBlogMutation,
   useMyBlogsQuery,
   useUpdateBlogMutation,
+  useLikeMutation,
 } = blogApi;

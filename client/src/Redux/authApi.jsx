@@ -8,6 +8,7 @@ export const myApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: productionUrl,
   }),
+  tagTypes: ["Blogs"],
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (credentials) => ({
@@ -62,6 +63,7 @@ export const myApi = createApi({
         url: "blogs",
         method: "GET",
       }),
+      providesTags: ["Blogs"],
     }),
   }),
 });

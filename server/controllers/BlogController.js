@@ -32,7 +32,9 @@ exports.createBlog = catchAsyncError(async (req, res, next) => {
 });
 
 exports.allBlogs = catchAsyncError(async (req, res, next) => {
-  const blogs = await Blog.find().populate("user");
+  const blogs = await Blog.find()
+    .populate("user")
+    .populate("likes.users", "name");
   res.status(200).json({
     success: true,
     blogs,

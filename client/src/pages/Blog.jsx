@@ -47,16 +47,6 @@ const Blog = () => {
 
   const blog = data?.blog;
 
-  if (!blog) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 to-purple-200">
-        <div className="text-2xl text-gray-600 bg-white p-8 rounded-xl shadow-lg">
-          Blog not found
-        </div>
-      </div>
-    );
-  }
-
   const handleEdit = () => {
     setIsEditing(true);
   };

@@ -1,3 +1,4 @@
+const Blog = require("../models/BlogModel");
 const User = require("../models/UserSchema");
 const ErrorHandler = require("../utils/ErrorHandler");
 const catchAsyncError = require("../utils/catchAsyncError");
@@ -144,4 +145,20 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
   user.resetPasswordExpire = undefined;
   await user.save();
   jwtToken("Successfully updated password", 200, user, res);
+});
+
+exports.likeOrDislike = catchAsyncError(async (req, res, next) => {
+  const id = req.params.id;
+  const blog = await Blog.findById(id);
+  if (!blog) return next(new ErrorHandler("Blog not found", 404));
+  const user = await User.findById(req.user.id);
+  if (blog.likes.users.includes(user._id)) {
+    blog.likes = blog.likes.users.filter((id) => id != user._id);
+  } else {
+    blog.likes.users.push(user._id);
+  }
+  await blog.save();
+  res
+    .status(200)
+    .json({ success: true, likes: blog?.likes?.users?.length || 0 });
 });
