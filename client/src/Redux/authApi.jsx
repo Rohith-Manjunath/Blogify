@@ -8,7 +8,7 @@ export const myApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: productionUrl,
   }),
-  tagTypes: ["Blogs"],
+  tagTypes: ["Blogs", "Liked"],
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (credentials) => ({

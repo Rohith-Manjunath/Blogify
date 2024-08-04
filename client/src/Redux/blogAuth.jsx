@@ -63,6 +63,14 @@ export const blogApi = createApi({
       }),
       invalidatesTags: ["Blog"],
     }),
+    liked: builder.query({
+      query: (userId) => ({
+        url: `blogs/liked/${userId}`,
+        method: "GET",
+        credentials: "include",
+      }),
+      providesTags: ["Blog"],
+    }),
   }),
 });
 
@@ -73,4 +81,5 @@ export const {
   useMyBlogsQuery,
   useUpdateBlogMutation,
   useLikeMutation,
+  useLikedQuery,
 } = blogApi;

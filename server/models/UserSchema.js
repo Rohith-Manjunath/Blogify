@@ -30,6 +30,15 @@ const userSchema = new mongoose.Schema(
       minlength: [8, "password should have at least 8 characters"],
       select: false,
     },
+    liked: {
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Blog",
+        },
+      ],
+      default: [],
+    },
     resetPasswordToken: {
       type: String,
     },

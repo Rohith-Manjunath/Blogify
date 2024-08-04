@@ -63,12 +63,20 @@ const Navbar = () => {
                 Blogs
               </NavLink>
               {user && (
-                <NavLink
-                  to={`/myBlogs/${user?._id}`}
-                  className=" text-gray-700 hover:text-white hover:bg-[#4f4ff9] hover:bg-[rgba((77, 77, 235)] px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-                >
-                  My Blogs
-                </NavLink>
+                <>
+                  <NavLink
+                    to={`/myBlogs/${user?._id}`}
+                    className=" text-gray-700 hover:text-white hover:bg-[#4f4ff9] hover:bg-[rgba((77, 77, 235)] px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                  >
+                    My Blogs
+                  </NavLink>
+                  <NavLink
+                    to={`/liked/${user?._id}`}
+                    className=" text-gray-700 hover:text-white hover:bg-[#4f4ff9] hover:bg-[rgba((77, 77, 235)] px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                  >
+                    Liked
+                  </NavLink>
+                </>
               )}
             </div>
             <div className="ml-4 flex items-center">

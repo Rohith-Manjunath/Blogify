@@ -151,14 +151,30 @@ exports.likeOrDislike = catchAsyncError(async (req, res, next) => {
   const id = req.params.id;
   const blog = await Blog.findById(id);
   if (!blog) return next(new ErrorHandler("Blog not found", 404));
+
   const user = await User.findById(req.user.id);
+  if (!user) return next(new ErrorHandler("User not found", 404));
+
   if (blog.likes.users.includes(user._id)) {
-    blog.likes = blog.likes.users.filter((id) => id != user._id);
+    blog.likes.users = blog.likes.users.filter(
+      (userId) => userId.toString() !== user._id.toString()
+    );
+    user.liked = user.liked.filter(
+      (blogId) => blogId.toString() !== id.toString()
+    );
+    blog.isLiked = false;
   } else {
     blog.likes.users.push(user._id);
+    user.liked.push(blog._id);
+    blog.isLiked = true;
   }
+
   await blog.save();
-  res
-    .status(200)
-    .json({ success: true, likes: blog?.likes?.users?.length || 0 });
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    likes: blog.likes.users.length,
+    isLiked: blog.isLiked,
+  });
 });

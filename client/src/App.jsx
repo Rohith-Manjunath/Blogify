@@ -9,6 +9,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./components/NotFound";
 import ProtectedRoute from "./components/layouts/ProtectedRoute";
+import LikedBlogs from "./pages/LikedBlogs";
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
         <Route path="/blog/:id" element={<Blog />}></Route>
         <Route element={<ProtectedRoute />}>
           <Route path="/myBlogs/:userId" element={<MyBlogs />}></Route>
+          <Route path="/liked/:userId" element={<LikedBlogs />}></Route>
         </Route>
         <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
         <Route

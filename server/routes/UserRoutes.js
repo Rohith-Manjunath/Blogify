@@ -10,7 +10,7 @@ const {
   likeOrDislike,
 } = require("../controllers/UserController");
 const { isAuthenticatedUser } = require("../middlewares/isAuthenticated");
-const { myBlogs } = require("../controllers/BlogController");
+const { myBlogs, likedBlogs } = require("../controllers/BlogController");
 const router = express.Router();
 
 router.route("/").get(Home);
@@ -22,5 +22,6 @@ router.route("/myBlogs").get(isAuthenticatedUser, myBlogs);
 router.route("/forgotPassword").post(forgotPassword);
 router.route("/resetPassword/:token").put(resetPassword);
 router.route("/blog/like/:id").put(isAuthenticatedUser, likeOrDislike);
+router.route("/blogs/liked/:id").get(isAuthenticatedUser, likedBlogs);
 
 module.exports = router;

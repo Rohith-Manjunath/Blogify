@@ -1,4 +1,5 @@
 const Blog = require("../models/BlogModel");
+const User = require("../models/UserSchema");
 const ErrorHandler = require("../utils/ErrorHandler");
 const catchAsyncError = require("../utils/catchAsyncError");
 const cloudinary = require("cloudinary");
@@ -123,10 +124,28 @@ exports.updateBlog = catchAsyncError(async (req, res, next) => {
 
 exports.myBlogs = catchAsyncError(async (req, res, next) => {
   const { _id } = req.user;
-  const blogs = await Blog.find({ user: _id }).sort({ createdAr: -1 });
+  const blogs = await Blog.find({ user: _id }).sort({ createdAt: -1 });
 
   res.status(200).json({
     success: true,
     blogs,
+  });
+});
+
+exports.likedBlogs = catchAsyncError(async (req, res, next) => {
+  const { id } = req.params;
+
+  // Find the user and get their liked blogs
+  const user = await User.findById(id).populate("liked");
+
+  if (!user) {
+    return next(new ErrorHandler("User not found", 404));
+  }
+
+  const likedBlogs = user.liked;
+
+  res.status(200).json({
+    success: true,
+    blogs: likedBlogs,
   });
 });
