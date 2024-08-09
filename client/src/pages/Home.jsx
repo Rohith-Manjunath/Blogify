@@ -2,6 +2,7 @@ import BlogCard from "../components/Cards/BlogCard";
 import MetaData from "../components/layouts/MetaData";
 import NoData from "../components/NoData";
 import { useBlogsQuery } from "../Redux/authApi";
+import Button from "@mui/material/Button";
 
 const Home = () => {
   const { data, isLoading, refetch } = useBlogsQuery();
@@ -30,7 +31,6 @@ const Home = () => {
           >
             Discover Our Latest Blogs
           </h1>
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {data &&
               data?.blogs &&

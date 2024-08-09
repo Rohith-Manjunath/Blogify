@@ -56,14 +56,14 @@ const Navbar = () => {
           </div>
           <div className="hidden md:flex md:items-center">
             <div className="flex space-x-4">
-              <NavLink
-                to="/"
-                className=" text-gray-700 hover:text-white hover:bg-[#4f4ff9] px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-              >
-                Blogs
-              </NavLink>
               {user && (
                 <>
+                  <NavLink
+                    to="/"
+                    className=" text-gray-700 hover:text-white hover:bg-[#4f4ff9] px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                  >
+                    Blogs
+                  </NavLink>
                   <NavLink
                     to={`/myBlogs/${user?._id}`}
                     className=" text-gray-700 hover:text-white hover:bg-[#4f4ff9] hover:bg-[rgba((77, 77, 235)] px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
@@ -158,19 +158,27 @@ const Navbar = () => {
         } md:hidden absolute top-20 left-0 w-full bg-white shadow-lg transition-all duration-300 ease-in-out`}
       >
         <div className="px-2 pt-2 pb-3 space-y-1">
-          <NavLink
-            to="/"
-            className=" text-gray-700 hover:text-white hover:bg-[#4f4ff9] block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
-          >
-            Blogs
-          </NavLink>
           {user && (
-            <NavLink
-              to={`/myBlogs/${user?._id}`}
-              className=" text-gray-700 hover:text-white hover:bg-[#4f4ff9] block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
-            >
-              My Blogs
-            </NavLink>
+            <>
+              <NavLink
+                to="/"
+                className=" text-gray-700 hover:text-white hover:bg-[#4f4ff9] block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
+              >
+                Blogs
+              </NavLink>
+              <NavLink
+                to={`/myBlogs/${user?._id}`}
+                className=" text-gray-700 hover:text-white hover:bg-[#4f4ff9] block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
+              >
+                My Blogs
+              </NavLink>
+              <NavLink
+                to={`/liked/${user?._id}`}
+                className=" text-gray-700 hover:text-white hover:bg-[#4f4ff9] block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200c"
+              >
+                Liked
+              </NavLink>
+            </>
           )}
 
           {!user ? (

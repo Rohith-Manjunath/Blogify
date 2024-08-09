@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 
 const BlogCard = ({ blog, refetch }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [isLiked, setIsLiked] = useState(blog?.isLiked);
   const alert = useAlert();
   const [likes, setLikes] = useState(blog?.likes?.users?.length);
   const user = useSelector((state) => state?.user?.user);
@@ -104,14 +103,14 @@ const BlogCard = ({ blog, refetch }) => {
         <div className="flex justify-start items-center mt-4 gap-1">
           <button
             onClick={() => {
-              setIsLiked(user && !isLiked), handleLike(blog?._id);
+              handleLike(blog?._id);
             }}
             className="focus:outline-none"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className={`h-6 w-6 transition-colors duration-300 ${
-                user && isLiked ? "text-red-500" : "text-gray-400"
+                blog?.isLiked ? "text-red-500" : "text-gray-400"
               }`}
               fill="currentColor"
               viewBox="0 0 24 24"

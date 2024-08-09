@@ -17,11 +17,11 @@ const App = () => {
       <Navbar />
       <Routes>
         <Route path="*" element={<NotFound />}></Route>
-        <Route path="/" element={<Home />}></Route>
         <Route path="/register" element={<Register />}></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/blog/:id" element={<Blog />}></Route>
         <Route element={<ProtectedRoute />}>
+          <Route path="/" element={<Home />}></Route>
           <Route path="/myBlogs/:userId" element={<MyBlogs />}></Route>
           <Route path="/liked/:userId" element={<LikedBlogs />}></Route>
         </Route>

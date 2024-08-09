@@ -26,10 +26,7 @@ const BlogSchema = new mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: "User",
     },
-    isLiked: {
-      type: Boolean,
-      default: false,
-    },
+
     likes: {
       users: [
         {

@@ -36,9 +36,21 @@ exports.allBlogs = catchAsyncError(async (req, res, next) => {
   const blogs = await Blog.find()
     .populate("user")
     .populate("likes.users", "name");
+
+  const userId = req.user._id.toString();
+  const blogsWithLikeStatus = blogs.map((blog) => {
+    const isLiked = blog.likes.users.some(
+      (user) => user._id.toString() === userId
+    );
+    return {
+      ...blog._doc,
+      isLiked,
+    };
+  });
+
   res.status(200).json({
     success: true,
-    blogs,
+    blogs: blogsWithLikeStatus,
   });
 });
 

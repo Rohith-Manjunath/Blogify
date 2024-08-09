@@ -17,6 +17,7 @@ export const myApi = createApi({
         body: credentials,
         credentials: "include",
       }),
+      invalidatesTags: ["Blogs"],
     }),
     loadUser: builder.query({
       query: () => ({
@@ -31,6 +32,7 @@ export const myApi = createApi({
         method: "POST",
         credentials: "include",
       }),
+      invalidatesTags: ["Blogs"],
     }),
     register: builder.mutation({
       query: (credentials) => ({
@@ -62,6 +64,7 @@ export const myApi = createApi({
       query: () => ({
         url: "blogs",
         method: "GET",
+        credentials: "include",
       }),
       providesTags: ["Blogs"],
     }),
