@@ -10,6 +10,14 @@ export const myApi = createApi({
   }),
   tagTypes: ["Blogs", "Liked"],
   endpoints: (builder) => ({
+    blogs: builder.query({
+      query: () => ({
+        url: "blogs",
+        method: "GET",
+        credentials: "include",
+      }),
+      providesTags: ["Blogs"],
+    }),
     login: builder.mutation({
       query: (credentials) => ({
         url: "login",
@@ -59,14 +67,6 @@ export const myApi = createApi({
           confirmPassword: data?.confirmPassword,
         },
       }),
-    }),
-    blogs: builder.query({
-      query: () => ({
-        url: "blogs",
-        method: "GET",
-        credentials: "include",
-      }),
-      providesTags: ["Blogs"],
     }),
   }),
 });

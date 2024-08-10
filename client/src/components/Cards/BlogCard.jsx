@@ -8,6 +8,7 @@ const BlogCard = ({ blog, refetch }) => {
   const [isHovered, setIsHovered] = useState(false);
   const alert = useAlert();
   const [likes, setLikes] = useState(blog?.likes?.users?.length);
+  const [isLiked, setIsLiked] = useState(blog?.isLiked);
   const user = useSelector((state) => state?.user?.user);
 
   const [like, { isLoading }] = useLikeMutation();
@@ -17,6 +18,7 @@ const BlogCard = ({ blog, refetch }) => {
       if (user) {
         const data = await like(blogId).unwrap();
         setLikes(data?.likes || 0);
+        setIsLiked(data?.isLiked);
         await refetch();
       } else {
         alert.show("Please login to like this blog");
@@ -110,7 +112,7 @@ const BlogCard = ({ blog, refetch }) => {
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className={`h-6 w-6 transition-colors duration-300 ${
-                blog?.isLiked ? "text-red-500" : "text-gray-400"
+                isLiked ? "text-red-500" : "text-gray-400"
               }`}
               fill="currentColor"
               viewBox="0 0 24 24"

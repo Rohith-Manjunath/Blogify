@@ -38,7 +38,7 @@ exports.allBlogs = catchAsyncError(async (req, res, next) => {
     .populate("likes.users", "name");
 
   const userId = req.user._id.toString();
-  const blogsWithLikeStatus = blogs.map((blog) => {
+  const blogsWithIsLiked = blogs.map((blog) => {
     const isLiked = blog.likes.users.some(
       (user) => user._id.toString() === userId
     );
@@ -50,7 +50,7 @@ exports.allBlogs = catchAsyncError(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    blogs: blogsWithLikeStatus,
+    blogs: blogsWithIsLiked,
   });
 });
 

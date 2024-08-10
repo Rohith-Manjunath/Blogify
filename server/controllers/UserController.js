@@ -155,7 +155,10 @@ exports.likeOrDislike = catchAsyncError(async (req, res, next) => {
   const user = await User.findById(req.user._id);
   if (!user) return next(new ErrorHandler("User not found", 404));
 
-  if (blog.likes.users.includes(user._id)) {
+  const isLiked = blog.likes.users.some(
+    (userId) => userId.toString() === user._id.toString()
+  );
+  if (isLiked) {
     blog.likes.users = blog.likes.users.filter(
       (userId) => userId.toString() !== user._id.toString()
     );
@@ -173,5 +176,6 @@ exports.likeOrDislike = catchAsyncError(async (req, res, next) => {
   res.status(200).json({
     success: true,
     likes: blog.likes.users.length,
+    isLiked: !isLiked,
   });
 });

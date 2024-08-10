@@ -3,19 +3,19 @@ const validator = require("validator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
+
 const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
       required: [true, "Please provide your name"],
       trim: true,
-      minlength: [6, "Name should contain atleast 6 characters"],
-      maxLength: [30, "Name can not be more than 30 characters"],
+      minlength: [6, "Name should contain at least 6 characters"],
+      maxLength: [30, "Name cannot be more than 30 characters"],
     },
     email: {
       type: String,
       unique: [true, "Email already exists"],
-
       required: true,
       lowercase: true,
       validate(value) {
@@ -26,8 +26,8 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, "please enter a password"],
-      minlength: [8, "password should have at least 8 characters"],
+      required: [true, "Please enter a password"],
+      minlength: [8, "Password should have at least 8 characters"],
       select: false,
     },
     liked: {
@@ -65,6 +65,7 @@ userSchema.methods.getJwtToken = async function () {
 userSchema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
+
 userSchema.methods.getResetPasswordToken = function () {
   const resetToken = crypto.randomBytes(32).toString("hex");
   this.resetPasswordToken = crypto

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const BlogSchema = new mongoose.Schema(
   {
     title: {
@@ -6,7 +7,7 @@ const BlogSchema = new mongoose.Schema(
       required: [true, "Please enter title of your blog"],
       trim: true,
       maxlength: [90, "Title cannot exceed 60 characters"],
-      minlength: [3, "Title should have atleast 3 characters"],
+      minlength: [3, "Title should have at least 3 characters"],
     },
     image: {
       public_id: {
@@ -25,8 +26,8 @@ const BlogSchema = new mongoose.Schema(
     user: {
       type: mongoose.Types.ObjectId,
       ref: "User",
+      required: true,
     },
-
     likes: {
       users: [
         {
