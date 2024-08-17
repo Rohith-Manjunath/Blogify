@@ -4,10 +4,7 @@ const bodyParser = require("body-parser");
 const cookie = require("cookie-parser");
 const cors = require("cors");
 const corsOptions = {
-  origin: [
-    "http://localhost:5173",
-    "https://adorable-tanuki-7799ca.netlify.app",
-  ],
+  origin: ["*"],
   credentials: true,
 };
 const UserRoute = require("./routes/UserRoutes");
