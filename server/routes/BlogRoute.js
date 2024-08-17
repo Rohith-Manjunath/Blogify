@@ -7,6 +7,7 @@ const {
   deleteBlog,
   updateBlog,
 } = require("../controllers/BlogController");
+const { comment, deleteComment } = require("../controllers/CommentsController");
 const router = express.Router();
 
 router.route("/create").post(isAuthenticatedUser, createBlog);
@@ -16,5 +17,9 @@ router
   .get(isAuthenticatedUser, getSingleblog)
   .delete(isAuthenticatedUser, deleteBlog)
   .put(isAuthenticatedUser, updateBlog);
+router
+  .route("/comment/:id")
+  .post(isAuthenticatedUser, comment)
+  .delete(isAuthenticatedUser, deleteComment);
 
 module.exports = router;
