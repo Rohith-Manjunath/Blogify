@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const cookie = require("cookie-parser");
 const cors = require("cors");
 const corsOptions = {
-  origin: ["*"],
+  origin: "*",
   credentials: true,
 };
 const UserRoute = require("./routes/UserRoutes");
