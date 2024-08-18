@@ -8,6 +8,7 @@ const {
   forgotPassword,
   resetPassword,
   likeOrDislike,
+  addProfilePicture,
 } = require("../controllers/UserController");
 const { isAuthenticatedUser } = require("../middlewares/isAuthenticated");
 const { myBlogs, likedBlogs } = require("../controllers/BlogController");
@@ -23,5 +24,6 @@ router.route("/forgotPassword").post(forgotPassword);
 router.route("/resetPassword/:token").put(resetPassword);
 router.route("/blog/like/:id").put(isAuthenticatedUser, likeOrDislike);
 router.route("/blogs/liked/:id").get(isAuthenticatedUser, likedBlogs);
+router.route("/profilePicture").post(isAuthenticatedUser, addProfilePicture);
 
 module.exports = router;

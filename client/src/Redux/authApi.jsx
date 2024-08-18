@@ -86,6 +86,14 @@ export const myApi = createApi({
       }),
       invalidatesTags: ["Blogs"],
     }),
+    addProfilePicture: builder.mutation({
+      query: ({ image }) => ({
+        url: `profilePicture`,
+        method: "POST",
+        credentials: "include",
+        body: { image },
+      }),
+    }),
   }),
 });
 
@@ -99,4 +107,5 @@ export const {
   useResetPasswordMutation,
   useCommentMutation,
   useDeleteCommentMutation,
+  useAddProfilePictureMutation,
 } = myApi;

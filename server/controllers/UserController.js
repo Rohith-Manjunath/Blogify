@@ -5,6 +5,7 @@ const catchAsyncError = require("../utils/catchAsyncError");
 const { jwtToken } = require("../utils/jwtToken");
 const { sendEmail } = require("../utils/sendEmail");
 const crypto = require("crypto");
+const cloudinary = require("cloudinary");
 
 exports.Home = (req, res) => {
   res.status(200).json({
@@ -177,5 +178,36 @@ exports.likeOrDislike = catchAsyncError(async (req, res, next) => {
     success: true,
     likes: blog.likes.users.length,
     isLiked: !isLiked,
+  });
+});
+
+exports.addProfilePicture = catchAsyncError(async (req, res, next) => {
+  const { image } = req.body;
+  const user = await User.findById(req.user._id);
+  if (!user) return next(new ErrorHandler("User not found", 404));
+  if (!image) return next(new ErrorHandler("Please upload a picture", 400));
+
+  // Delete the previous image from Cloudinary if it exists
+  if (user.avatar && user.avatar.public_id) {
+    await cloudinary.v2.uploader.destroy(user.avatar.public_id);
+  }
+
+  // Upload the new image to Cloudinary
+  const myCloud = await cloudinary.v2.uploader.upload(image, {
+    folder: "test/userimages",
+    width: 700,
+    height: 700,
+    crop: "scale",
+  });
+
+  // Update the user's avatar with the new image details
+  user.avatar.url = myCloud.secure_url;
+  user.avatar.public_id = myCloud.public_id;
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Profile picture added successfully",
+    user,
   });
 });

@@ -30,6 +30,10 @@ const userSchema = new mongoose.Schema(
       minlength: [8, "Password should have at least 8 characters"],
       select: false,
     },
+    avatar: {
+      public_id: { type: String },
+      url: { type: String },
+    },
     liked: {
       type: [
         {
