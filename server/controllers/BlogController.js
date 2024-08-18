@@ -35,22 +35,12 @@ exports.createBlog = catchAsyncError(async (req, res, next) => {
 exports.allBlogs = catchAsyncError(async (req, res, next) => {
   const blogs = await Blog.find()
     .populate("user")
-    .populate("likes.users", "name");
-
-  const userId = req.user._id.toString();
-  const blogsWithIsLiked = blogs.map((blog) => {
-    const isLiked = blog.likes.users.some(
-      (user) => user._id.toString() === userId
-    );
-    return {
-      ...blog._doc,
-      isLiked,
-    };
-  });
+    .populate("likes.users", "name")
+    .populate("comments.user", "name");
 
   res.status(200).json({
     success: true,
-    blogs: blogsWithIsLiked,
+    blogs,
   });
 });
 

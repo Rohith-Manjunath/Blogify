@@ -68,6 +68,24 @@ export const myApi = createApi({
         },
       }),
     }),
+    comment: builder.mutation({
+      query: ({ blogId, comment }) => ({
+        url: `comment/${blogId}`,
+        method: "POST",
+        body: { comment },
+        credentials: "include",
+      }),
+      invalidatesTags: ["Blogs"],
+    }),
+    deleteComment: builder.mutation({
+      query: ({ blogId, commentId }) => ({
+        url: `comment/${blogId}`,
+        method: "DELETE",
+        body: { commentId },
+        credentials: "include",
+      }),
+      invalidatesTags: ["Blogs"],
+    }),
   }),
 });
 
@@ -79,4 +97,6 @@ export const {
   useBlogsQuery,
   useForgotPasswordMutation,
   useResetPasswordMutation,
+  useCommentMutation,
+  useDeleteCommentMutation,
 } = myApi;
