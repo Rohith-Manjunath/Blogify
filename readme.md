@@ -1,12 +1,12 @@
 # Blog Application
 
-![Website Screenshot](./client/src/assets/WebsiteImages/screenshot1%20(1).png)
-![Website Screenshot](./client/src/assets/WebsiteImages/screenshot1%20(2).png)
-![Website Screenshot](./client/src/assets/WebsiteImages/screenshot1%20(3).png)
-![Website Screenshot](./client/src/assets/WebsiteImages/screenshot1%20(4).png)
-![Website Screenshot](./client/src/assets/WebsiteImages/screenshot1%20(5).png)
-![Website Screenshot](./client/src/assets/WebsiteImages/screenshot1%20(6).png)
-![Website Screenshot](./client/src/assets/WebsiteImages/screenshot1%20(7).png)
+![Website Screenshot](./client/src/assets/WebsiteImages/screenshot%20(1).png)
+![Website Screenshot](./client/src/assets/WebsiteImages/screenshot%20(2).png)
+![Website Screenshot](./client/src/assets/WebsiteImages/screenshot%20(3).png)
+![Website Screenshot](./client/src/assets/WebsiteImages/screenshot%20(4).png)
+![Website Screenshot](./client/src/assets/WebsiteImages/screenshot%20(5).png)
+![Website Screenshot](./client/src/assets/WebsiteImages/screenshot%20(6).png)
+![Website Screenshot](./client/src/assets/WebsiteImages/screenshot%20(7).png)
 
 ## Overview
 
