@@ -148,6 +148,29 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
   jwtToken("Successfully updated password", 200, user, res);
 });
 
+exports.changePassword = catchAsyncError(async (req, res, next) => {
+  const user = await User.findById(req.user.id).select("+password");
+  if (!user) {
+    return next(new ErrorHandler("User not found", 404));
+  }
+  const oldPassword = req.body.oldPassword;
+  const newPassword = req.body.newPassword;
+  const confirmPassword = req.body.confirmPassword;
+  if (newPassword !== confirmPassword) {
+    return next(new ErrorHandler("Password do not match", 400));
+  }
+  const isPasswordCorrect = await user.comparePassword(oldPassword);
+  if (!isPasswordCorrect) {
+    return next(new ErrorHandler("Old password is not correct", 401));
+  }
+  user.password = req.body.newPassword;
+  await user.save();
+  res.status(200).json({
+    success: true,
+    message: "Password updated successfully",
+  });
+});
+
 exports.likeOrDislike = catchAsyncError(async (req, res, next) => {
   const id = req.params.id;
   const blog = await Blog.findById(id);

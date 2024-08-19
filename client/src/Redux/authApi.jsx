@@ -94,6 +94,14 @@ export const myApi = createApi({
         body: { image },
       }),
     }),
+    changePassword: builder.mutation({
+      query: (data) => ({
+        url: `changePassword`,
+        method: "PUT",
+        credentials: "include",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -108,4 +116,5 @@ export const {
   useCommentMutation,
   useDeleteCommentMutation,
   useAddProfilePictureMutation,
+  useChangePasswordMutation,
 } = myApi;

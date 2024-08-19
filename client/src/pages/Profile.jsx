@@ -4,7 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { setUser } from "../Redux/UserSlice";
 import { useAlert } from "react-alert";
-import { useAddProfilePictureMutation } from "../Redux/authApi";
+import {
+  useAddProfilePictureMutation,
+  useChangePasswordMutation,
+} from "../Redux/authApi";
 
 const Profile = () => {
   const user = useSelector((state) => state?.user?.user);
@@ -14,6 +17,13 @@ const Profile = () => {
   const dispatch = useDispatch();
   const [updateProfilePic, { isLoading: imageUploadLoading }] =
     useAddProfilePictureMutation();
+  const [passwordData, setPasswordData] = useState({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [changePassword, { isLoading }] = useChangePasswordMutation();
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -41,6 +51,26 @@ const Profile = () => {
       setIsModalOpen(false);
       setSelectedImage("");
       dispatch(setUser(data?.user));
+    } catch (e) {
+      alert.error(e?.data?.err);
+    }
+  };
+
+  const handlePasswordChange = (e) => {
+    setPasswordData({ ...passwordData, [e.target.name]: e.target.value });
+  };
+
+  const handlePasswordSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const data = await changePassword(passwordData).unwrap();
+      alert.success(data?.message);
+      setIsPasswordModalOpen(false);
+      setPasswordData({
+        oldPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
     } catch (e) {
       alert.error(e?.data?.err);
     }
@@ -99,6 +129,7 @@ const Profile = () => {
                 icon={<RiLockPasswordLine />}
                 label="Change Password"
                 color="indigo"
+                onClick={() => setIsPasswordModalOpen(true)}
               />
             </div>
           </div>
@@ -150,6 +181,77 @@ const Profile = () => {
           </div>
         </div>
       )}
+      {isPasswordModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-2xl font-semibold">Change Password</h3>
+              <button
+                onClick={() => setIsPasswordModalOpen(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <FaTimes size={24} />
+              </button>
+            </div>
+            <form onSubmit={handlePasswordSubmit} className="space-y-4">
+              <div>
+                <label
+                  htmlFor="oldPassword"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Old Password
+                </label>
+                <input
+                  type="text"
+                  id="oldPassword"
+                  name="oldPassword"
+                  value={passwordData.oldPassword}
+                  onChange={handlePasswordChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="newPassword"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  New Password
+                </label>
+                <input
+                  type="text"
+                  id="newPassword"
+                  name="newPassword"
+                  value={passwordData.newPassword}
+                  onChange={handlePasswordChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="confirmPassword"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Confirm New Password
+                </label>
+                <input
+                  type="text"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  value={passwordData.confirmPassword}
+                  onChange={handlePasswordChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors duration-300"
+              >
+                Change Password
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -162,8 +264,9 @@ const ProfileDetail = ({ icon, label, value }) => (
   </div>
 );
 
-const ProfileButton = ({ icon, label, color }) => (
+const ProfileButton = ({ icon, label, color, onClick }) => (
   <button
+    onClick={onClick}
     className={`w-full flex items-center justify-center gap-2 bg-${color}-500 text-white px-6 py-3 rounded-lg hover:bg-${color}-600 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg`}
   >
     {icon}
