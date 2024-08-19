@@ -143,7 +143,7 @@ const Blog = () => {
                   </div>
                 </div>
               </div>
-              {user?._id === blog?.user?._id && !isEditing && (
+              {user?._id === blog?.user && !isEditing && (
                 <motion.button
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}

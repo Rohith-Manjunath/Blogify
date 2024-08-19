@@ -48,7 +48,7 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden">
+      <div className="max-w-4xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden mt-20">
         <div className="grid grid-cols-1 md:grid-cols-2">
           <div className="bg-gradient-to-br from-blue-500 to-purple-600 p-8 flex flex-col items-center justify-center">
             <div className="relative mb-8 group">

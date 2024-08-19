@@ -143,8 +143,14 @@ exports.myBlogs = catchAsyncError(async (req, res, next) => {
 exports.likedBlogs = catchAsyncError(async (req, res, next) => {
   const { id } = req.params;
 
-  // Find the user and get their liked blogs
-  const user = await User.findById(id).populate("liked");
+  // Find the user and get their liked blogs along with the user information for each liked blog
+  const user = await User.findById(id).populate({
+    path: "liked",
+    populate: {
+      path: "user", // Assuming the field in the Blog schema that references the User model is called 'user'
+      select: "name avatar", // Only select the name and avatar fields
+    },
+  });
 
   if (!user) {
     return next(new ErrorHandler("User not found", 404));

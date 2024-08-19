@@ -216,18 +216,26 @@ const Navbar = () => {
               </div>
             </>
           ) : (
-            <div className="mt-3 px-3 space-y-3 py-2">
+            <div className="mt-3 px-3 py-2 flex flex-col items-center justify-center gap-4">
               <button
                 onClick={logoutUser}
                 className="w-full bg-gradient-to-r from-indigo-600 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-medium hover:from-indigo-700 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200"
               >
                 {isLoading ? "Logging out..." : "Logout"}{" "}
               </button>
-              <img
-                src={user?.avatar?.url}
-                alt=""
-                className="w-14 h-14 rounded-full"
-              />
+              <NavLink
+                className="w-full h-full rounded-full"
+                to={`/profile/${user?._id}`}
+              >
+                <img
+                  src={
+                    user?.avatar?.url ||
+                    `https://static.vecteezy.com/system/resources/previews/036/280/650/original/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg`
+                  }
+                  alt=""
+                  className="w-12 h-12 rounded-full"
+                />
+              </NavLink>
             </div>
           )}
         </div>

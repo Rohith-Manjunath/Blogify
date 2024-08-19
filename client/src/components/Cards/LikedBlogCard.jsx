@@ -1,30 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useAlert } from "react-alert";
-import { useLikeMutation } from "../../Redux/blogAuth";
-import { useSelector } from "react-redux";
 
 const LikedBlogCard = ({ blog }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [isLiked, setIsLiked] = useState(blog?.isLiked);
-  const alert = useAlert();
-  const [likes, setLikes] = useState(blog?.likes?.users?.length);
-  const user = useSelector((state) => state?.user?.user);
 
-  const [like, { isLoading }] = useLikeMutation();
-
-  const handleLike = async (blogId) => {
-    try {
-      if (user) {
-        const data = await like(blogId).unwrap();
-        setLikes(data?.likes || 0);
-      } else {
-        alert.show("Please login to like this blog");
-      }
-    } catch (e) {
-      alert.error(e?.data?.err);
-    }
-  };
+  console.log(blog);
 
   return (
     <div
@@ -50,18 +30,26 @@ const LikedBlogCard = ({ blog }) => {
       <div className="p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 text-gray-400 mr-2"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                clipRule="evenodd"
+            {!blog?.user?.avatar?.url ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 text-gray-400 mr-2"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            ) : (
+              <img
+                src={blog?.user?.avatar?.url}
+                alt=""
+                className="w-8 mr-2 h-8 rounded-full"
               />
-            </svg>
+            )}
             <span className="text-sm font-medium text-gray-700">
               {blog?.user?.name || blog?.user?.email || "Anonymous"}
             </span>
