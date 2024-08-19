@@ -83,18 +83,26 @@ const BlogCard = ({ blog, refetch }) => {
       <div className="p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 text-gray-400 mr-2"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                clipRule="evenodd"
+            {!blog?.user?.avatar?.url ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 text-gray-400 mr-2"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            ) : (
+              <img
+                src={blog?.user?.avatar?.url}
+                alt=""
+                className="w-8 mr-2 h-8 rounded-full"
               />
-            </svg>
+            )}
             <span className="text-sm font-medium text-gray-700">
               {blog?.user?.name || blog?.user?.email || "Anonymous"}
             </span>
@@ -179,7 +187,7 @@ const BlogCard = ({ blog, refetch }) => {
           </button>
         </div>
         {showComments && (
-          <div className="mt-12 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl shadow-lg p-8 transition-all duration-300 ease-in-out hover:shadow-xl">
+          <div className="mt-12 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl shadow-lg p-2 sm:p-4 md:p-8 transition-all duration-300 ease-in-out hover:shadow-xl">
             <h3 className="text-xxl font-bold mb-6 text-gray-600 border-b pb-2">
               Comments
             </h3>
@@ -189,12 +197,19 @@ const BlogCard = ({ blog, refetch }) => {
                 {blog?.comments?.map((comment) => (
                   <div
                     key={comment?._id}
-                    className=" bg-white rounded-lg shadow-md p-5 transition-all duration-300 ease-in-out hover:shadow-lg transform hover:-translate-y-1"
+                    className=" bg-white rounded-lg shadow-md p-3 transition-all duration-300 ease-in-out hover:shadow-lg transform hover:-translate-y-1"
                   >
                     <div className="xl:flex justify-between items-center mb-3">
-                      <h4 className="text-[15px] font-bold text-gray-600">
-                        {comment?.user?.name}
-                      </h4>
+                      <div className="flex items-center justify-start gap-2">
+                        <img
+                          src={comment?.user?.avatar?.url}
+                          alt=""
+                          className="w-8 h-8 rounded-full"
+                        />
+                        <h4 className="text-[15px] font-bold text-gray-600">
+                          {comment?.user?.name}
+                        </h4>
+                      </div>
                       <span className="text-[12px] text-gray-400 italic">
                         {new Date(comment?.createdAt).toLocaleString()}
                       </span>

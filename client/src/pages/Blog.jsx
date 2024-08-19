@@ -14,6 +14,7 @@ import {
 } from "react-icons/fi";
 import { useAlert } from "react-alert";
 import MetaData from "../components/layouts/MetaData";
+import { useSelector } from "react-redux";
 
 const Blog = () => {
   const params = useParams();
@@ -24,6 +25,7 @@ const Blog = () => {
   const [editedTitle, setEditedTitle] = useState("");
   const [editedContent, setEditedContent] = useState("");
   const alert = useAlert();
+  const user = useSelector((state) => state?.user?.user);
 
   useEffect(() => {
     if (data) {
@@ -141,7 +143,7 @@ const Blog = () => {
                   </div>
                 </div>
               </div>
-              {!isEditing && (
+              {user?._id === blog?.user?._id && !isEditing && (
                 <motion.button
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}

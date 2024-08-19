@@ -35,8 +35,14 @@ exports.createBlog = catchAsyncError(async (req, res, next) => {
 exports.allBlogs = catchAsyncError(async (req, res, next) => {
   const blogs = await Blog.find()
     .populate("user")
-    .populate("likes.users", "name")
-    .populate("comments.user", "name");
+    .populate({
+      path: "likes.users",
+      select: "name",
+    })
+    .populate({
+      path: "comments.user",
+      select: "name avatar.url",
+    });
 
   res.status(200).json({
     success: true,
