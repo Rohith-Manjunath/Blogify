@@ -11,6 +11,7 @@ import NotFound from "./components/NotFound";
 import ProtectedRoute from "./components/layouts/ProtectedRoute";
 import LikedBlogs from "./pages/LikedBlogs";
 import Profile from "./pages/Profile";
+import UserData from "./pages/UserData";
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
         <Route path="/register" element={<Register />}></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/blog/:id" element={<Blog />}></Route>
+        <Route path="/user/:id" element={<UserData />}></Route>
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<Home />}></Route>
           <Route path="/myBlogs/:userId" element={<MyBlogs />}></Route>

@@ -4,8 +4,6 @@ import { Link } from "react-router-dom";
 const LikedBlogCard = ({ blog }) => {
   const [isHovered, setIsHovered] = useState(false);
 
-  console.log(blog);
-
   return (
     <div
       className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-2"

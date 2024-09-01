@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { FaCamera, FaEdit, FaUserCircle, FaTimes } from "react-icons/fa";
+import {
+  FaCamera,
+  FaEdit,
+  FaUserCircle,
+  FaTimes,
+  FaUsers,
+} from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { setUser } from "../Redux/UserSlice";
@@ -42,7 +48,7 @@ const Profile = () => {
   };
 
   const handleImageUpdateSubmit = async (e) => {
-    e.preventDefault(); // Prevent the default form submission
+    e.preventDefault();
     try {
       const data = await updateProfilePic({
         image: selectedImage,
@@ -118,12 +124,17 @@ const Profile = () => {
                 label="Joined"
                 value={new Date(user?.createdAt).toLocaleDateString()}
               />
+              <ProfileDetail
+                icon={<FaUsers />}
+                label="Followers"
+                value={user?.followers?.length || 0}
+              />
             </div>
             <div className="mt-8 space-y-4">
               <ProfileButton
                 icon={<FaEdit />}
                 label="Update Profile"
-                color="blue"
+                color="green"
               />
               <ProfileButton
                 icon={<RiLockPasswordLine />}
@@ -202,7 +213,7 @@ const Profile = () => {
                   Old Password
                 </label>
                 <input
-                  type="text"
+                  type="password"
                   id="oldPassword"
                   name="oldPassword"
                   value={passwordData.oldPassword}
@@ -218,7 +229,7 @@ const Profile = () => {
                   New Password
                 </label>
                 <input
-                  type="text"
+                  type="password"
                   id="newPassword"
                   name="newPassword"
                   value={passwordData.newPassword}
@@ -234,7 +245,7 @@ const Profile = () => {
                   Confirm New Password
                 </label>
                 <input
-                  type="text"
+                  type="password"
                   id="confirmPassword"
                   name="confirmPassword"
                   value={passwordData.confirmPassword}
@@ -246,7 +257,7 @@ const Profile = () => {
                 type="submit"
                 className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors duration-300"
               >
-                Change Password
+                {isLoading ? "Changing Password..." : "Change Password"}
               </button>
             </form>
           </div>

@@ -234,3 +234,40 @@ exports.addProfilePicture = catchAsyncError(async (req, res, next) => {
     user,
   });
 });
+
+exports.getUserData = catchAsyncError(async (req, res, next) => {
+  const user = await User.findById(req.params.userId).populate("followers");
+  if (!user) return next(new ErrorHandler("User not found", 404));
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
+exports.followUnfollow = catchAsyncError(async (req, res, next) => {
+  const userId = req.params.userId;
+  const userToFollow = await User.findById(userId);
+
+  if (!userToFollow) return next(new ErrorHandler("User not found", 404));
+
+  const followerExist = userToFollow.followers.includes(req.user._id);
+
+  if (followerExist) {
+    // Remove follower
+    userToFollow.followers = userToFollow.followers.filter(
+      (user) => user.toString() !== req.user._id.toString()
+    );
+  } else {
+    // Add follower
+    userToFollow.followers.push(req.user._id);
+  }
+
+  await userToFollow.save();
+
+  res.status(200).json({
+    success: true,
+    message: followerExist
+      ? "Unfollowed successfully"
+      : "Followed successfully",
+  });
+});

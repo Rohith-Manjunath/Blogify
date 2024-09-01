@@ -10,6 +10,8 @@ const {
   likeOrDislike,
   addProfilePicture,
   changePassword,
+  followUnfollow,
+  getUserData,
 } = require("../controllers/UserController");
 const { isAuthenticatedUser } = require("../middlewares/isAuthenticated");
 const { myBlogs, likedBlogs } = require("../controllers/BlogController");
@@ -27,5 +29,7 @@ router.route("/changePassword").put(isAuthenticatedUser, changePassword);
 router.route("/blog/like/:id").put(isAuthenticatedUser, likeOrDislike);
 router.route("/blogs/liked/:id").get(isAuthenticatedUser, likedBlogs);
 router.route("/profilePicture").post(isAuthenticatedUser, addProfilePicture);
+router.route("/follow/:userId").put(isAuthenticatedUser, followUnfollow);
+router.route("/user/:userId").get(getUserData);
 
 module.exports = router;

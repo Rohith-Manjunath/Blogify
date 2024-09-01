@@ -1,14 +1,14 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const devUrl = "http://localhost:3000/api/";
-const productionUrl = "https://assignment-blog-1ek8.onrender.com/api/";
+const productionUrl = "https://blogify-95tj.onrender.com/api/";
 
 export const myApi = createApi({
   reducerPath: "myApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: productionUrl,
+    baseUrl: devUrl,
   }),
-  tagTypes: ["Blogs", "Liked"],
+  tagTypes: ["Blogs", "Liked", "UserData"],
   endpoints: (builder) => ({
     blogs: builder.query({
       query: () => ({
@@ -102,6 +102,21 @@ export const myApi = createApi({
         body: data,
       }),
     }),
+    userData: builder.query({
+      query: (userId) => ({
+        url: `/user/${userId}`,
+        method: "GET",
+      }),
+      providesTags: ["UserData"],
+    }),
+    followUnfollow: builder.mutation({
+      query: (userId) => ({
+        url: `follow/${userId}`,
+        method: "PUT",
+        credentials: "include",
+      }),
+      invalidatesTags: ["UserData"],
+    }),
   }),
 });
 
@@ -117,4 +132,6 @@ export const {
   useDeleteCommentMutation,
   useAddProfilePictureMutation,
   useChangePasswordMutation,
+  useUserDataQuery,
+  useFollowUnfollowMutation,
 } = myApi;

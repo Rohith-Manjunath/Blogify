@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useAlert } from "react-alert";
 import { useLikeMutation } from "../../Redux/blogAuth";
 import { useSelector } from "react-redux";
@@ -97,11 +97,16 @@ const BlogCard = ({ blog, refetch }) => {
                 />
               </svg>
             ) : (
-              <img
-                src={blog?.user?.avatar?.url}
-                alt=""
+              <NavLink
                 className="w-8 mr-2 h-8 rounded-full"
-              />
+                to={`/user/${blog?.user?._id}`}
+              >
+                <img
+                  src={blog?.user?.avatar?.url}
+                  alt=""
+                  className="w-8 mr-2 h-8 rounded-full"
+                />
+              </NavLink>
             )}
             <span className="text-sm font-medium text-gray-700">
               {blog?.user?.name || blog?.user?.email || "Anonymous"}

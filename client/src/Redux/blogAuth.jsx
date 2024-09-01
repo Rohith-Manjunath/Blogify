@@ -1,12 +1,12 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const devUrl = "http://localhost:3000/api/";
-const productionUrl = "https://assignment-blog-1ek8.onrender.com/api/";
+const productionUrl = "https://blogify-95tj.onrender.com/api/";
 
 export const blogApi = createApi({
   reducerPath: "blogApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: productionUrl,
+    baseUrl: devUrl,
   }),
   tagTypes: ["Blog"],
   endpoints: (builder) => ({
