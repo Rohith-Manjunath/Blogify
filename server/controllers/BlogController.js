@@ -163,3 +163,45 @@ exports.likedBlogs = catchAsyncError(async (req, res, next) => {
     blogs: likedBlogs,
   });
 });
+
+exports.likeDislikeComment = catchAsyncError(async (req, res, next) => {
+  const { commentId } = req.params;
+  const { blogId } = req.body;
+
+  // Find the blog by ID
+  const blog = await Blog.findById(blogId);
+  if (!blog) {
+    return next(new ErrorHandler("Blog not found", 404));
+  }
+
+  // Find the specific comment within the blog
+  const comment = blog?.comments?.find(
+    (comment) => comment._id.toString() === commentId.toString()
+  );
+  if (!comment) {
+    return next(new ErrorHandler("Comment not found", 404));
+  }
+
+  // Check if the user has already liked the comment
+  const hasUserLiked = comment?.likes?.users?.some(
+    (user) => user.toString() === req.user._id.toString()
+  );
+
+  if (hasUserLiked) {
+    // If the user has already liked the comment, unlike it
+    comment.likes = comment?.likes?.users?.filter(
+      (user) => user.toString() !== req.user._id.toString()
+    );
+  } else {
+    // If the user has not liked the comment, add the user's ID to the likes array
+    comment?.likes?.users?.push(req.user._id);
+  }
+
+  // Save the blog document
+  await blog.save();
+
+  res.status(200).json({
+    success: true,
+    likes: comment.likes.length, // Returning the number of likes
+  });
+});
