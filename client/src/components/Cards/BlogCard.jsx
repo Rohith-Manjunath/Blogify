@@ -6,7 +6,9 @@ import { useSelector } from "react-redux";
 import {
   useCommentMutation,
   useDeleteCommentMutation,
+  useLikeDislikeCommentMutation,
 } from "../../Redux/authApi";
+import { FaHeart } from "react-icons/fa";
 
 const BlogCard = ({ blog, refetch }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -16,6 +18,7 @@ const BlogCard = ({ blog, refetch }) => {
   const user = useSelector((state) => state?.user?.user);
   const [commentNow, { data }] = useCommentMutation();
   const [deleteComment] = useDeleteCommentMutation();
+  const [likeDislikeComment] = useLikeDislikeCommentMutation();
 
   const [like, { isLoading }] = useLikeMutation();
 
@@ -56,6 +59,17 @@ const BlogCard = ({ blog, refetch }) => {
       }
     } catch (e) {
       alert.error(e?.data?.err);
+    }
+  };
+  const handleCommentLikeDisLike = async ({ commentId, blogId }) => {
+    try {
+      await likeDislikeComment({ commentId, blogId }).unwrap();
+
+      alert.success("Successfully liked/disliked the comment");
+    } catch (e) {
+      alert.error(
+        e?.data?.err || "An error occurred while processing your request."
+      );
     }
   };
 
@@ -192,7 +206,7 @@ const BlogCard = ({ blog, refetch }) => {
           </button>
         </div>
         {showComments && (
-          <div className="mt-12 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl shadow-lg p-2 sm:p-4 md:p-8 transition-all duration-300 ease-in-out hover:shadow-xl">
+          <div className="mt-12 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl shadow-lg p-2 sm:p-4 md:p-6 transition-all duration-300 ease-in-out hover:shadow-xl">
             <h3 className="text-xxl font-bold mb-6 text-gray-600 border-b pb-2">
               Comments
             </h3>
@@ -211,13 +225,35 @@ const BlogCard = ({ blog, refetch }) => {
                           alt=""
                           className="w-8 h-8 rounded-full"
                         />
-                        <h4 className="text-[15px] font-bold text-gray-600">
+                        <h4 className="text-[12px] sm:text-[15px] font-bold text-gray-600">
                           {comment?.user?.name}
                         </h4>
                       </div>
                       <span className="text-[12px] text-gray-400 italic">
                         {new Date(comment?.createdAt).toLocaleString()}
                       </span>
+                      <button
+                        onClick={() =>
+                          handleCommentLikeDisLike({
+                            commentId: comment?._id,
+                            blogId: blog?._id,
+                          })
+                        }
+                        className="w-2 h-2 hover:cursor-pointer absolute right-4 top-4 lg:top-14"
+                      >
+                        <FaHeart
+                          className={`${
+                            comment?.likes?.users?.some(
+                              (user) => user?._id === user?._id
+                            )
+                              ? "text-red-500"
+                              : "text-gray-500"
+                          }`}
+                        />
+                        <span className="absolute text-gray-500 text-[12px]">
+                          {comment?.likes?.users?.length || 0}
+                        </span>
+                      </button>
                     </div>
                     <p className="text-gray-700 leading-relaxed">
                       {comment?.comment}

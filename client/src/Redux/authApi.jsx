@@ -117,6 +117,17 @@ export const myApi = createApi({
       }),
       invalidatesTags: ["UserData"],
     }),
+    likeDislikeComment: builder.mutation({
+      query: ({ commentId, blogId }) => ({
+        url: `likeDislikeComment/${commentId}`,
+        method: "PUT",
+        credentials: "include",
+        body: {
+          blogId,
+        },
+      }),
+      invalidatesTags: ["Blogs"],
+    }),
   }),
 });
 
@@ -134,4 +145,5 @@ export const {
   useChangePasswordMutation,
   useUserDataQuery,
   useFollowUnfollowMutation,
+  useLikeDislikeCommentMutation,
 } = myApi;
