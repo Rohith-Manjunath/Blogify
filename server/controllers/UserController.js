@@ -6,6 +6,7 @@ const { jwtToken } = require("../utils/jwtToken");
 const { sendEmail } = require("../utils/sendEmail");
 const crypto = require("crypto");
 const cloudinary = require("cloudinary");
+const redis = require("../redis/redis");
 
 exports.Home = (req, res) => {
   res.status(200).json({
@@ -173,8 +174,22 @@ exports.changePassword = catchAsyncError(async (req, res, next) => {
 
 exports.likeOrDislike = catchAsyncError(async (req, res, next) => {
   const id = req.params.id;
-  const blog = await Blog.findById(id);
-  if (!blog) return next(new ErrorHandler("Blog not found", 404));
+
+  // Check Redis cache first
+  const cachedBlog = await redis.get(`blog:${id}`);
+  let blog;
+
+  if (cachedBlog) {
+    // Parse the cached data if found
+    blog = JSON.parse(cachedBlog);
+  } else {
+    // If not found in Redis, fetch from MongoDB
+    blog = await Blog.findById(id);
+    if (!blog) return next(new ErrorHandler("Blog not found", 404));
+
+    // Store the blog data in Redis
+    await redis.setEx(`blog:${id}`, 3600, JSON.stringify(blog)); // Cache for 1 hour
+  }
 
   const user = await User.findById(req.user._id);
   if (!user) return next(new ErrorHandler("User not found", 404));
@@ -182,6 +197,7 @@ exports.likeOrDislike = catchAsyncError(async (req, res, next) => {
   const isLiked = blog.likes.users.some(
     (userId) => userId.toString() === user._id.toString()
   );
+
   if (isLiked) {
     blog.likes.users = blog.likes.users.filter(
       (userId) => userId.toString() !== user._id.toString()
@@ -196,6 +212,14 @@ exports.likeOrDislike = catchAsyncError(async (req, res, next) => {
 
   await blog.save();
   await user.save();
+
+  // Invalidate related cached data
+  await redis.del("allBlogs"); // Invalidate all blogs cache
+  await redis.del(`likedBlogs_${req.user._id}`); // Invalidate liked blogs cache for the user
+  await redis.del(`myBlogs`); // Invalidate user's own blogs cache
+
+  // Update the Redis cache for the modified blog
+  await redis.setEx(`blog:${id}`, 3600, JSON.stringify(blog)); // Update cache
 
   res.status(200).json({
     success: true,
