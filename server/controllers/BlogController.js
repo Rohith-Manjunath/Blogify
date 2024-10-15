@@ -1,29 +1,35 @@
 const Blog = require("../models/BlogModel");
 const User = require("../models/UserSchema");
+const redis = require("../redis/redis");
 const ErrorHandler = require("../utils/ErrorHandler");
 const catchAsyncError = require("../utils/catchAsyncError");
 const cloudinary = require("cloudinary");
 
+// Create a blog with Cloudinary image upload and Redis cache invalidation
 exports.createBlog = catchAsyncError(async (req, res, next) => {
   const myCloud = await cloudinary.v2.uploader.upload(req.body.image, {
-    folder: "test",
+    folder: "blogs",
     width: 400,
     height: 400,
     crop: "scale",
   });
 
   const { title, description } = req.body;
-  const userId = req.user._id; // Accessing the user's _id directly
+  const userId = req.user._id;
 
   const newBlog = await Blog.create({
     title,
     description,
-    user: userId, // Assigning the userId to the user field
+    user: userId,
     image: {
       public_id: myCloud.public_id,
       url: myCloud.secure_url,
     },
   });
+
+  // Invalidate Redis cache
+  await redis.del("allBlogs");
+  await redis.del("myBlogs");
 
   res.status(201).json({
     success: true,
@@ -32,7 +38,18 @@ exports.createBlog = catchAsyncError(async (req, res, next) => {
   });
 });
 
+// Fetch all blogs with Redis caching
 exports.allBlogs = catchAsyncError(async (req, res, next) => {
+  const cachedBlogs = await redis.get("allBlogs");
+
+  if (cachedBlogs) {
+    return res.status(200).json({
+      success: true,
+      blogs: JSON.parse(cachedBlogs),
+      message: "Fetched from cache",
+    });
+  }
+
   const blogs = await Blog.find()
     .populate("user")
     .populate({
@@ -44,17 +61,21 @@ exports.allBlogs = catchAsyncError(async (req, res, next) => {
       select: "name avatar.url",
     });
 
+  await redis.setEx("allBlogs", 300, JSON.stringify(blogs));
+
   res.status(200).json({
     success: true,
     blogs,
+    message: "Fetched from database",
   });
 });
 
+// Get a single blog by ID
 exports.getSingleblog = catchAsyncError(async (req, res, next) => {
   const { blogId } = req.params;
-  const blog = await Blog.findById({ _id: blogId });
+  const blog = await Blog.findById(blogId);
   if (!blog) {
-    return next(new ErrorHandler("No blog found with this id", 404));
+    return next(new ErrorHandler("No blog found with this ID", 404));
   }
 
   res.status(200).json({
@@ -63,66 +84,75 @@ exports.getSingleblog = catchAsyncError(async (req, res, next) => {
   });
 });
 
+// Delete a blog by ID with Cloudinary image deletion
 exports.deleteBlog = catchAsyncError(async (req, res, next) => {
-  const { user } = req;
-  const { _id } = user;
+  const { _id } = req.user;
   const { blogId } = req.params;
-  const blog = await Blog.findById({ _id: blogId });
+  const blog = await Blog.findById(blogId);
+
   if (!blog) {
-    return next(new ErrorHandler("No blog found with this id", 404));
+    return next(new ErrorHandler("No blog found with this ID", 404));
   }
-  if (!(blog.user._id.toString() === _id.toString())) {
+
+  if (blog.user._id.toString() !== _id.toString()) {
     return next(
       new ErrorHandler("You do not have permission to perform this action", 403)
     );
   }
 
   await cloudinary.uploader.destroy(blog.image.public_id);
-
   await Blog.deleteOne({ _id: blogId });
+
+  await redis.del("allBlogs");
+  await redis.del("myBlogs");
+
   res.status(200).json({
     success: true,
     message: "Blog deleted successfully",
   });
 });
 
+// Update a blog by ID
 exports.updateBlog = catchAsyncError(async (req, res, next) => {
-  const { user } = req;
-  const { _id } = user;
+  const { _id } = req.user;
   const { blogId } = req.params;
-  const blog = await Blog.findById({ _id: blogId });
+  const blog = await Blog.findById(blogId);
+
   if (!blog) {
-    return next(new ErrorHandler("No blog found with this id", 404));
+    return next(new ErrorHandler("No blog found with this ID", 404));
   }
-  if (!(blog.user._id.toString() === _id.toString())) {
+
+  if (blog.user._id.toString() !== _id.toString()) {
     return next(
       new ErrorHandler("You do not have permission to perform this action", 403)
     );
   }
-  const { description, image, title } = req.body;
 
-  if (!image || typeof image === "undefined" || typeof image === "") {
-    blog.title = title;
-    blog.description = description;
-  } else {
+  const { title, description, image } = req.body;
+
+  if (image) {
     await cloudinary.uploader.destroy(blog.image.public_id);
 
     const myCloud = await cloudinary.v2.uploader.upload(req.body.image, {
-      folder: "test",
+      folder: "blogs",
       width: 400,
       height: 400,
       crop: "scale",
     });
 
-    blog.title = title;
-    blog.description = description;
-    blog.image = blog.image = {
+    blog.image = {
       public_id: myCloud.public_id,
       url: myCloud.secure_url,
     };
   }
 
+  blog.title = title;
+  blog.description = description;
+
   await blog.save();
+
+  await redis.del("allBlogs");
+  await redis.del("myBlogs");
 
   res.status(200).json({
     success: true,
@@ -130,9 +160,17 @@ exports.updateBlog = catchAsyncError(async (req, res, next) => {
   });
 });
 
+// Fetch blogs by the authenticated user
 exports.myBlogs = catchAsyncError(async (req, res, next) => {
   const { _id } = req.user;
+  const cachedData = await redis.get("myBlogs");
+
+  if (cachedData) {
+    return res.status(200).json(JSON.parse(cachedData));
+  }
+
   const blogs = await Blog.find({ user: _id }).sort({ createdAt: -1 });
+  await redis.setEx("myBlogs", 3600, JSON.stringify(blogs));
 
   res.status(200).json({
     success: true,
@@ -140,15 +178,26 @@ exports.myBlogs = catchAsyncError(async (req, res, next) => {
   });
 });
 
+// Fetch blogs liked by a user
 exports.likedBlogs = catchAsyncError(async (req, res, next) => {
   const { id } = req.params;
 
-  // Find the user and get their liked blogs along with the user information for each liked blog
+  // Try to fetch likedBlogs from Redis cache
+  const cachedLikedBlogs = await redis.get(`likedBlogs_${id}`);
+  if (cachedLikedBlogs) {
+    return res.status(200).json({
+      success: true,
+      blogs: JSON.parse(cachedLikedBlogs),
+      message: "Fetched from cache",
+    });
+  }
+
+  // If not cached, fetch from the database
   const user = await User.findById(id).populate({
     path: "liked",
     populate: {
-      path: "user", // Assuming the field in the Blog schema that references the User model is called 'user'
-      select: "name avatar", // Only select the name and avatar fields
+      path: "user", // Assuming the Blog schema has a 'user' field
+      select: "name avatar", // Selecting name and avatar fields
     },
   });
 
@@ -158,50 +207,48 @@ exports.likedBlogs = catchAsyncError(async (req, res, next) => {
 
   const likedBlogs = user.liked;
 
+  // Cache the liked blogs for future requests (e.g., 300 seconds)
+  await redis.setEx(`likedBlogs_${id}`, 300, JSON.stringify(likedBlogs));
+
   res.status(200).json({
     success: true,
     blogs: likedBlogs,
   });
 });
 
+// Like or dislike a comment on a blog
 exports.likeDislikeComment = catchAsyncError(async (req, res, next) => {
   const { commentId } = req.params;
   const { blogId } = req.body;
 
-  // Find the blog by ID
   const blog = await Blog.findById(blogId);
   if (!blog) {
     return next(new ErrorHandler("Blog not found", 404));
   }
 
-  // Find the specific comment within the blog
-  const comment = blog?.comments?.find(
+  const comment = blog.comments.find(
     (comment) => comment._id.toString() === commentId.toString()
   );
   if (!comment) {
     return next(new ErrorHandler("Comment not found", 404));
   }
 
-  // Check if the user has already liked the comment
-  const hasUserLiked = comment?.likes?.users?.some(
+  const hasUserLiked = comment.likes.users.some(
     (user) => user.toString() === req.user._id.toString()
   );
 
   if (hasUserLiked) {
-    // If the user has already liked the comment, unlike it
-    comment.likes = comment?.likes?.users?.filter(
+    comment.likes.users = comment.likes.users.filter(
       (user) => user.toString() !== req.user._id.toString()
     );
   } else {
-    // If the user has not liked the comment, add the user's ID to the likes array
-    comment?.likes?.users?.push(req.user._id);
+    comment.likes.users.push(req.user._id);
   }
 
-  // Save the blog document
   await blog.save();
 
   res.status(200).json({
     success: true,
-    likes: comment.likes.length, // Returning the number of likes
+    likes: comment.likes.users.length,
   });
 });
