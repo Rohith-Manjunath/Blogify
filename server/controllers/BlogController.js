@@ -1,11 +1,10 @@
 const Blog = require("../models/BlogModel");
 const User = require("../models/UserSchema");
-const redis = require("../redis/redis");
 const ErrorHandler = require("../utils/ErrorHandler");
 const catchAsyncError = require("../utils/catchAsyncError");
 const cloudinary = require("cloudinary");
 
-// Create a blog with Cloudinary image upload and Redis cache invalidation
+// Create a blog with Cloudinary image upload
 exports.createBlog = catchAsyncError(async (req, res, next) => {
   const myCloud = await cloudinary.v2.uploader.upload(req.body.image, {
     folder: "blogs",
@@ -27,10 +26,6 @@ exports.createBlog = catchAsyncError(async (req, res, next) => {
     },
   });
 
-  // Invalidate Redis cache
-  await redis.del("allBlogs");
-  await redis.del("myBlogs");
-
   res.status(201).json({
     success: true,
     message: "Blog created successfully",
@@ -38,18 +33,8 @@ exports.createBlog = catchAsyncError(async (req, res, next) => {
   });
 });
 
-// Fetch all blogs with Redis caching
+// Fetch all blogs
 exports.allBlogs = catchAsyncError(async (req, res, next) => {
-  const cachedBlogs = await redis.get("allBlogs");
-
-  if (cachedBlogs) {
-    return res.status(200).json({
-      success: true,
-      blogs: JSON.parse(cachedBlogs),
-      message: "Fetched from cache",
-    });
-  }
-
   const blogs = await Blog.find()
     .populate("user")
     .populate({
@@ -61,8 +46,6 @@ exports.allBlogs = catchAsyncError(async (req, res, next) => {
       select: "name avatar.url",
     });
 
-  await redis.setEx("allBlogs", 300, JSON.stringify(blogs));
-
   res.status(200).json({
     success: true,
     blogs,
@@ -71,7 +54,7 @@ exports.allBlogs = catchAsyncError(async (req, res, next) => {
 });
 
 // Get a single blog by ID
-exports.getSingleblog = catchAsyncError(async (req, res, next) => {
+exports.getSingleBlog = catchAsyncError(async (req, res, next) => {
   const { blogId } = req.params;
   const blog = await Blog.findById(blogId);
   if (!blog) {
@@ -102,9 +85,6 @@ exports.deleteBlog = catchAsyncError(async (req, res, next) => {
 
   await cloudinary.uploader.destroy(blog.image.public_id);
   await Blog.deleteOne({ _id: blogId });
-
-  await redis.del("allBlogs");
-  await redis.del("myBlogs");
 
   res.status(200).json({
     success: true,
@@ -151,9 +131,6 @@ exports.updateBlog = catchAsyncError(async (req, res, next) => {
 
   await blog.save();
 
-  await redis.del("allBlogs");
-  await redis.del("myBlogs");
-
   res.status(200).json({
     success: true,
     message: "Blog updated successfully",
@@ -163,14 +140,8 @@ exports.updateBlog = catchAsyncError(async (req, res, next) => {
 // Fetch blogs by the authenticated user
 exports.myBlogs = catchAsyncError(async (req, res, next) => {
   const { _id } = req.user;
-  const cachedData = await redis.get("myBlogs");
-
-  if (cachedData) {
-    return res.status(200).json(JSON.parse(cachedData));
-  }
 
   const blogs = await Blog.find({ user: _id }).sort({ createdAt: -1 });
-  await redis.setEx("myBlogs", 3600, JSON.stringify(blogs));
 
   res.status(200).json({
     success: true,
@@ -182,17 +153,6 @@ exports.myBlogs = catchAsyncError(async (req, res, next) => {
 exports.likedBlogs = catchAsyncError(async (req, res, next) => {
   const { id } = req.params;
 
-  // Try to fetch likedBlogs from Redis cache
-  const cachedLikedBlogs = await redis.get(`likedBlogs_${id}`);
-  if (cachedLikedBlogs) {
-    return res.status(200).json({
-      success: true,
-      blogs: JSON.parse(cachedLikedBlogs),
-      message: "Fetched from cache",
-    });
-  }
-
-  // If not cached, fetch from the database
   const user = await User.findById(id).populate({
     path: "liked",
     populate: {
@@ -206,9 +166,6 @@ exports.likedBlogs = catchAsyncError(async (req, res, next) => {
   }
 
   const likedBlogs = user.liked;
-
-  // Cache the liked blogs for future requests (e.g., 300 seconds)
-  await redis.setEx(`likedBlogs_${id}`, 300, JSON.stringify(likedBlogs));
 
   res.status(200).json({
     success: true,
