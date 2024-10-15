@@ -3,7 +3,7 @@ const { isAuthenticatedUser } = require("../middlewares/isAuthenticated");
 const {
   createBlog,
   allBlogs,
-  getSingleblog,
+  getSingleBlog,
   deleteBlog,
   updateBlog,
 } = require("../controllers/BlogController");
@@ -14,7 +14,7 @@ router.route("/create").post(isAuthenticatedUser, createBlog);
 router.route("/blogs").get(isAuthenticatedUser, allBlogs);
 router
   .route("/blog/:blogId")
-  .get(isAuthenticatedUser, getSingleblog)
+  .get(isAuthenticatedUser, getSingleBlog)
   .delete(isAuthenticatedUser, deleteBlog)
   .put(isAuthenticatedUser, updateBlog);
 router
