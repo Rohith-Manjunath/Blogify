@@ -7,6 +7,7 @@ import { transitions, positions, Provider as AlertProvider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistor, store } from "./Redux/store.jsx";
+import { BrowserRouter } from "react-router-dom";
 
 const options = {
   position: positions.BOTTOM_CENTER,
@@ -20,7 +21,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <PersistGate loading={null} persistor={persistor}>
       <AlertProvider template={AlertTemplate} {...options}>
         <HelmetProvider>
-          <App />
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
         </HelmetProvider>
       </AlertProvider>{" "}
     </PersistGate>

@@ -6,7 +6,7 @@ const productionUrl = "https://blogify-1-fspq.onrender.com/api/";
 export const myApi = createApi({
   reducerPath: "myApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: productionUrl,
+    baseUrl: devUrl,
   }),
   tagTypes: ["Blogs", "Liked", "UserData"],
   endpoints: (builder) => ({

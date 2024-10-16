@@ -141,7 +141,7 @@ const BlogCard = ({ blog, refetch }) => {
           </span>
           <Link
             to={`/blog/${blog?._id}`}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-colors duration-300 flex items-center space-x-1"
+            className="active:scale-90 duration-200 transition-all px-4 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 flex items-center space-x-1"
           >
             <span>Read More</span>
             <svg
@@ -163,15 +163,15 @@ const BlogCard = ({ blog, refetch }) => {
         <div className="flex justify-start items-center mt-4 gap-4">
           <button
             onClick={() => handleLike(blog?._id)}
-            className="focus:outline-none flex items-center"
+            className="focus:outline-none flex items-center "
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className={`h-6 w-6 transition-colors duration-300 ${
+              className={`h-6 w-6 active:scale-75 duration-200 transition-all ${
                 blog?.likes?.users?.some((like) => like?._id === user?._id)
                   ? "text-red-500"
                   : "text-gray-400"
-              }`}
+              } `}
               fill="currentColor"
               viewBox="0 0 24 24"
             >

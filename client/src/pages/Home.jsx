@@ -1,11 +1,18 @@
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom"; // to detect route changes
 import BlogCard from "../components/Cards/BlogCard";
 import MetaData from "../components/layouts/MetaData";
 import NoData from "../components/NoData";
 import { useBlogsQuery } from "../Redux/authApi";
-import Button from "@mui/material/Button";
 
 const Home = () => {
+  const location = useLocation(); // Detects route changes
   const { data, isLoading, refetch } = useBlogsQuery();
+
+  useEffect(() => {
+    // Refetch data when route changes
+    refetch();
+  }, [location, refetch]); // refetch triggered when route or location changes
 
   if (isLoading) {
     return (
@@ -32,11 +39,9 @@ const Home = () => {
             Discover Our Latest Blogs
           </h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {data &&
-              data?.blogs &&
-              data?.blogs?.map((blog) => (
-                <BlogCard key={blog?._id} blog={blog} refetch={refetch} />
-              ))}
+            {data?.blogs?.map((blog) => (
+              <BlogCard key={blog?._id} blog={blog} refetch={refetch} />
+            ))}
           </div>
         </div>
       </div>

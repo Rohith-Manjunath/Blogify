@@ -9,11 +9,16 @@ exports.jwtToken = async (message, statusCode, user, res) => {
     sameSite: "None",
   };
 
-  res.cookie("token", token, options).status(statusCode).json({
-    success: true,
-    token,
-    message,
-    user,
-    isAuthenticated: true,
-  });
+  res
+    .cookie("token", token, options)
+    .status(statusCode)
+    .json({
+      success: true,
+      token,
+      message,
+      user,
+      isAuthenticated: true,
+      tokenExpiresIn:
+        Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000,
+    });
 };

@@ -67,7 +67,7 @@ const LikedBlogCard = ({ blog }) => {
           </span>
           <Link
             to={`/blog/${blog?._id}`}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-colors duration-300 flex items-center space-x-1"
+            className="px-4 py-2 active:scale-90 duration-200 transition-all bg-indigo-600 text-white rounded-full hover:bg-indigo-700 flex items-center space-x-1"
           >
             <span>Read More</span>
             <svg

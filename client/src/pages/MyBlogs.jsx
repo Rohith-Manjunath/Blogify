@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
 import MyBlogCard from "../components/Cards/MyBlogCard";
 import DeleteModal from "../components/Modals/DeleteModal";
 import AddModal from "../components/Modals/AddModal";
@@ -12,12 +12,15 @@ import MetaData from "../components/layouts/MetaData";
 
 const MyBlogs = () => {
   const params = useParams();
-  const { data, isLoading } = useMyBlogsQuery(params?.userId);
+  const alert = useAlert();
+  const { data, isLoading, isError, refetch, error } = useMyBlogsQuery(
+    params?.userId
+  );
   const [id, setId] = useState(null);
   const [openDelete, setOpenDelete] = useState(false);
   const [openAdd, setOpenAdd] = useState(false);
+  const location = useLocation();
   const [deleteBlog, { isLoading: deleteLoading }] = useDeleteBlogMutation();
-  const alert = useAlert();
 
   const handleDelete = async (blogId) => {
     try {
@@ -28,6 +31,12 @@ const MyBlogs = () => {
       alert.error(e?.data?.err);
     }
   };
+
+  console.log("error", error);
+
+  useEffect(() => {
+    refetch();
+  }, [refetch, params?.userId, location]);
 
   const handleOpenDelete = (blogId) => {
     setId(blogId);
@@ -54,6 +63,16 @@ const MyBlogs = () => {
     );
   }
 
+  if (isError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-red-500">
+          Failed to load blogs. Please try again later.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <>
       <MetaData title={"My Blogs"} />
@@ -65,7 +84,7 @@ const MyBlogs = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             className="text-5xl font-extrabold text-center mb-16 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 mt-20"
-            style={{ lineHeight: "1.5" }} // Adjust line height as needed
+            style={{ lineHeight: "1.5" }}
           >
             My Blogs
           </motion.h1>

@@ -1,13 +1,20 @@
+import { useEffect } from "react";
+import { useParams, useLocation } from "react-router-dom"; // useLocation to detect route changes
 import BlogCard from "../components/Cards/BlogCard";
 import MetaData from "../components/layouts/MetaData";
 import NoData from "../components/NoData";
 import LikedBlogCard from "../components/Cards/LikedBlogCard";
-import { useParams } from "react-router-dom";
 import { useLikedQuery } from "../Redux/blogAuth";
 
 const LikedBlogs = () => {
   const params = useParams();
-  const { data, isLoading } = useLikedQuery(params?.userId);
+  const location = useLocation(); // Detects route changes
+  const { data, isLoading, refetch } = useLikedQuery(params?.userId);
+
+  useEffect(() => {
+    // Refetch data when route changes
+    refetch();
+  }, [location, refetch, params?.userId]); // Trigger refetch when location or userId changes
 
   if (isLoading) {
     return (

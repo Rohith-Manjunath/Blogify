@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useLogoutMutation } from "../Redux/authApi";
-import { LogoutUser } from "../Redux/UserSlice";
+import { LogoutUser, removeTokenExpiration } from "../Redux/UserSlice";
 import { useAlert } from "react-alert";
 
 const Navbar = () => {
@@ -32,6 +32,7 @@ const Navbar = () => {
       const data = await logout().unwrap();
       alert.success(data?.message);
       dispatch(LogoutUser());
+      dispatch(removeTokenExpiration());
       navigate("/login");
     } catch (e) {
       alert.error(e?.data?.err);

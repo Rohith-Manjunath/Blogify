@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../Redux/authApi";
-import { setUser } from "../Redux/UserSlice";
+import { setTokenExpiration, setUser } from "../Redux/UserSlice";
 import { useDispatch } from "react-redux";
 import { useAlert } from "react-alert";
 import MetaData from "../components/layouts/MetaData";
@@ -20,6 +20,7 @@ const Login = () => {
     try {
       const data = await login({ email, password }).unwrap();
       dispatch(setUser(data?.user));
+      dispatch(setTokenExpiration(data?.tokenExpiresIn));
       alert.success(data?.message);
       navigate("/");
     } catch (e) {
